@@ -13,10 +13,10 @@ bridge_list_1 = ['vh_WIFI_Bridge_01']
 
 while(1):
     
-    dt = str(int(time.mktime(datetime.datetime.now().timetuple())))
-    window_in_seconds = 20
-    df = str(int(dt)-window_in_seconds)
-    
+    df = str(int(time.time())-30)
+    dt = str(int(time.time()-22))
+    print('dt"',dt)
+    print('df: ',df)
     n = {}
     for v in bridge_list:
 
@@ -48,6 +48,7 @@ while(1):
         print(c, ' is under: ' , z)
     
     print(" ")
+    
     time.sleep(20)
 
 

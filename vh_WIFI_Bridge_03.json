@@ -1,0 +1,58 @@
+[
+    {
+        "asset_name": "Staff_09",
+        "wifi_bridge": "vh_WIFI_Bridge_03",
+        "datetime": "1670309922",
+        "location": "Area 3",
+        "radius": "5.01",
+        "time": "14:58:42"
+    },
+    {
+        "asset_name": "Staff_07",
+        "wifi_bridge": "vh_WIFI_Bridge_03",
+        "datetime": "1670309922",
+        "location": "Area 3",
+        "radius": "0.06",
+        "time": "14:58:42"
+    },
+    {
+        "asset_name": "Staff_01",
+        "wifi_bridge": "vh_WIFI_Bridge_03",
+        "datetime": "1670309923",
+        "location": "Area 3",
+        "radius": "0.10",
+        "time": "14:58:43"
+    },
+    {
+        "asset_name": "Staff_07",
+        "wifi_bridge": "vh_WIFI_Bridge_03",
+        "datetime": "1670309924",
+        "location": "Area 3",
+        "radius": "0.08",
+        "time": "14:58:44"
+    },
+    {
+        "asset_name": "Staff_01",
+        "wifi_bridge": "vh_WIFI_Bridge_03",
+        "datetime": "1670309925",
+        "location": "Area 3",
+        "radius": "0.06",
+        "time": "14:58:45"
+    },
+    {
+        "asset_name": "Staff_07",
+        "wifi_bridge": "vh_WIFI_Bridge_03",
+        "datetime": "1670309927",
+        "location": "Area 3",
+        "radius": "0.06",
+        "time": "14:58:47"
+    },
+    {
+        "asset_name": "Staff_01",
+        "wifi_bridge": "vh_WIFI_Bridge_03",
+        "datetime": "1670309927",
+        "location": "Area 3",
+        "radius": "0.11",
+        "time": "14:58:47"
+    }
+]

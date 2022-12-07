@@ -1,7 +1,6 @@
 import requests
 import datetime
 import time
-import json
 
 url = 'http://iot.rodsum.com/api/getlocationdetection'
 
@@ -10,18 +9,17 @@ bridge_list = ['vh_WIFI_Bridge_02', 'vh_WIFI_Bridge_04']
 
 while (1):
 
-    dt = str(int(time.mktime(datetime.datetime.now().timetuple())))
-    window_in_seconds = 20
+    window_in_seconds = 5
+    dt = str(int(time.time()-22))
     df = str(int(dt)-window_in_seconds)
-    
-    time.sleep(20)
+    print('dt: ', dt)
+    print('df: ', df)
 
     for v in bridge_list:
 
         a = {'b': v,'df':df,'dt':dt}
         x = requests.post(url, data=a)
         data = x.json()
-        #print(data)
         print(v + ' ' + str(datetime.datetime.now().strftime('%H:%M:%S')))
 
         for b in staff_list:
@@ -37,5 +35,5 @@ while (1):
                 print(b)
         
         print(" ")
-
+    time.sleep(15)
     
