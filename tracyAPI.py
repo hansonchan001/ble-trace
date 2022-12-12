@@ -5,12 +5,12 @@ import json
 
 url = 'http://iot.rodsum.com/api/getlocationdetection'
 
-dt = str(int(time.mktime(datetime.datetime.now().timetuple()))-22)
+dt = str(int(time.mktime(datetime.datetime.now().timetuple()))-100)
 window_in_seconds = 5
 df = str(int(dt)-window_in_seconds)
 
-beacon_list = ['Staff_03', 'Staff_04', 'Staff_06', 'Staff_08', 'Staff_10']
-bridge_list = ['vh_WIFI_Bridge_02', 'vh_WIFI_Bridge_04', 'vh_WIFI_Bridge_03']
+beacon_list = ['Staff_03', 'Staff_04', 'Staff_06', 'Staff_08', 'Staff_10', 'Staff_01', 'Staff_02', 'Staff_05', 'Staff_07', 'Staff_09']
+bridge_list = ['vh_WIFI_Bridge_01', 'vh_WIFI_Bridge_02', 'vh_WIFI_Bridge_03', 'vh_WIFI_Bridge_04']
 
 for v in bridge_list:
     n = {'b':v,'df' :df,'dt': dt}

@@ -6,8 +6,9 @@ import pandas as pd
 
 url = 'http://iot.rodsum.com/api/getlocationdetection'
 
-staff_list = ['Staff_03', 'Staff_04', 'Staff_06', 'Staff_08', 'Staff_10']
-bridge_list = ['vh_WIFI_Bridge_02', 'vh_WIFI_Bridge_04']
+staff_list = ['Staff_03', 'Staff_04', 'Staff_06', 'Staff_08', 'Staff_10', 'Staff_01', 'Staff_02', 'Staff_05', 'Staff_07', 'Staff_09']
+bridge_list = ['vh_WIFI_Bridge_01', 'vh_WIFI_Bridge_02', 'vh_WIFI_Bridge_03', 'vh_WIFI_Bridge_04']
+
 
 #count = 0
 l = []
@@ -19,7 +20,7 @@ try:
     while (1):
 
         window_in_seconds = 5
-        dt = str(int(time.time()-22))
+        dt = str(int(time.time()-80))
         df = str(int(dt)-window_in_seconds)
         #print('dt: ', dt)
         #print('df: ', df)
@@ -58,12 +59,11 @@ try:
             l.append(x)
         print(l)
         print(" ")
-        time.sleep(15)
+        time.sleep(20)
 
 except KeyboardInterrupt:
-    #count += 1
-    pd.DataFrame(l).to_excel('data_128/within_1.xlsx')
+    file_name = str(datetime.datetime.now().strftime('%H%M'))
+    pd.DataFrame(l).to_excel('data_128/' + file_name + 'out.xlsx', index=False)
 
 finally:
-    print('data stored in excel file.')
-
+    print('\ndata stored in excel file.')

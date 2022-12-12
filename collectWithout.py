@@ -6,8 +6,8 @@ import pandas as pd
 
 url = 'http://iot.rodsum.com/api/getlocationdetection'
 
-staff_list = ['Staff_03', 'Staff_04', 'Staff_06', 'Staff_08', 'Staff_10']
-bridge_list = ['vh_WIFI_Bridge_02', 'vh_WIFI_Bridge_04']
+staff_list = ['Staff_03', 'Staff_04', 'Staff_06', 'Staff_08', 'Staff_10', 'Staff_01', 'Staff_02', 'Staff_05', 'Staff_07', 'Staff_09']
+bridge_list = ['vh_WIFI_Bridge_01', 'vh_WIFI_Bridge_02', 'vh_WIFI_Bridge_03', 'vh_WIFI_Bridge_04']
 
 #count = 0
 l = []
@@ -62,7 +62,8 @@ try:
 
 except KeyboardInterrupt:
     #count += 1
-    pd.DataFrame(l).to_excel('data_128/without_1.xlsx')
+    file_name = str(datetime.datetime.now().strftime('%H%M'))
+    pd.DataFrame(l).to_excel('data_128/without/' +file_name+  '.xlsx')
 
 finally:
     print('data stored in excel file.')

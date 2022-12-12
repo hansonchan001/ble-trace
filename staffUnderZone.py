@@ -5,16 +5,13 @@ import json
 
 url = 'http://iot.rodsum.com/api/getlocationdetection'
 
-staff_list = ['Staff_03', 'Staff_04', 'Staff_06', 'Staff_08', 'Staff_10']
-staff_list_1 = [ 'Staff_1', 'Staff_2', 'Staff_5', 'Staff_7', 'Staff_9']
-bridge_list = ['vh_WIFI_Bridge_02', 'vh_WIFI_Bridge_04']
-bridge_list_1 = ['vh_WIFI_Bridge_01']
-
+staff_list = ['Staff_01', 'Staff_02','Staff_03', 'Staff_04',  'Staff_05','Staff_06','Staff_07', 'Staff_08','Staff_09','Staff_10']
+bridge_list = ['vh_WIFI_Bridge_01', 'vh_WIFI_Bridge_02', 'vh_WIFI_Bridge_03', 'vh_WIFI_Bridge_04']
 
 while(1):
     
-    df = str(int(time.time())-30)
-    dt = str(int(time.time()-22))
+    df = str(int(time.time())-80)
+    dt = str(int(time.time()))
     print('dt"',dt)
     print('df: ',df)
     n = {}
@@ -49,7 +46,7 @@ while(1):
     
     print(" ")
     
-    time.sleep(20)
+    time.sleep(15)
 
 
 
