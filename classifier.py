@@ -1,6 +1,7 @@
 import keras
 from keras.models import Sequential
 from keras.layers import Dense
+import keras.optimizers as opt
 import pandas as pd
 import numpy as np
 
@@ -49,8 +50,10 @@ classifier.add(Dense(units = 8, activation = 'relu'))
 classifier.add(Dense(units = 6, activation = 'relu'))
 classifier.add(Dense(units = 2, activation = 'sigmoid'))
 
-classifier.compile(optimizer = 'adam', loss = 'binary_crossentropy')
-classifier.fit(X_train, Y_train, batch_size = 1, epochs = 2800, shuffle= True)
+opt = opt.Adam(learning_rate=0.01)
+
+classifier.compile(optimizer = opt, loss = 'binary_crossentropy')
+classifier.fit(X_train, Y_train, batch_size = 1, epochs = 2300, shuffle= True)
 
 Y_pred = classifier.predict(X_test)
 #Y_pred = [ 1 if y>=0.5 else 0 for y in Y_pred ]
