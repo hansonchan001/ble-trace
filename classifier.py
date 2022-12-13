@@ -5,6 +5,7 @@ import keras.optimizers as opt
 import pandas as pd
 import numpy as np
 import handle_inside_data
+import matplotlib.pyplot as plt
 
 #prepare input data
 inside_data = pd.read_excel('processed_inside/114833.xlsx')
@@ -20,13 +21,13 @@ for i in range(len(inside)):
 for g in range(len(outside)):
     y_outside.append(0)
 
-Y_train = y_inside[:1200] + y_outside[:-1000]
-Y_test = y_inside[1200:] + y_outside[-1000:]
+Y_train = y_inside[:100] + y_outside[:-100]
+Y_test = y_inside[100:] + y_outside[-100:]
 Y_train = np.array(Y_train)
 Y_test = np.array(Y_test)
 
-X_train = inside[:1200] + outside[:-1000]
-X_test = inside[1200:] + outside[-1000:]
+X_train = inside[:100] + outside[:-100]
+X_test = inside[100:] + outside[-100:]
 X_train = np.array(X_train)
 X_test = np.array(X_test)
 
@@ -37,22 +38,26 @@ classifier.add(Dense(units = 8, activation = 'relu'))
 classifier.add(Dense(units = 4, activation = 'relu'))
 classifier.add(Dense(units = 1, activation = 'sigmoid'))
 
-classifier.compile(optimizer = 'adam', loss = 'binary_crossentropy')
-classifier.fit(X_train, Y_train, batch_size = 1, epochs = 1500, shuffle= True)
-opt = opt.Adam(learning_rate=0.001)
+classifier.compile(optimizer = 'adam', loss = 'binary_crossentropy', metrics=['accuracy'])
+history = classifier.fit(X_train, Y_train, validation_split=0.33, epochs=150, batch_size=1, verbose=0, shuffle= True)
 
-Y_pred = classifier.predict(X_test)
-Y_pred_mirror = Y_pred
+loss, accuracy = classifier.evaluate(X_test)
+#Y_pred = classifier.predict(X_test)
 
-for y in Y_pred_mirror:
-    if y > 0.5:
-        y = 1
-    else:
-        y = 0
-
-Y_pred= (np.rint(Y_pred)).astype(int)
-d = 0
-for p in range(len(Y_pred)):
-    if Y_pred[p] == Y_test[p]:
-        d += 1
-print(d/len(Y_pred)*100)
+print(history.history.keys())
+# summarize history for accuracy
+plt.plot(history.history['accuracy'])
+plt.plot(history.history['val_accuracy'])
+plt.title('model accuracy')
+plt.ylabel('accuracy')
+plt.xlabel('epoch')
+plt.legend(['train', 'test'], loc='upper left')
+plt.show()
+# summarize history for loss
+plt.plot(history.history['loss'])
+plt.plot(history.history['val_loss'])
+plt.title('model loss')
+plt.ylabel('loss')
+plt.xlabel('epoch')
+plt.legend(['train', 'test'], loc='upper left')
+plt.show()

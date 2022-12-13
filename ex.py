@@ -8,9 +8,9 @@ bridge_list = ['vh_WIFI_Bridge_02', 'vh_WIFI_Bridge_04']
 
 url = 'http://iot.rodsum.com/api/getlocationdetection'
 
-window_in_seconds = 3
+window_in_seconds = 100
 
-dt = str(int(time.time())-50)
+dt = str(int(time.time()))
 df = str(int(dt)-window_in_seconds)
 
 for b in bridge_list:
@@ -24,4 +24,8 @@ for b in bridge_list:
     d = requests.post(url, data = n)
 
     data = d.json()
-    print(data)
+    for e in data:
+        if e['asset_name'] == 'Staff_03' or e['asset_name'] == 'Staff_09' or e['asset_name'] == 'Staff_10':
+            print(e)
+        elif e['asset_name'] == 'Staff_04':
+            print(e)
