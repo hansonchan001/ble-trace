@@ -10,18 +10,14 @@ staff_list = ['Staff_03', 'Staff_04', 'Staff_06', 'Staff_08', 'Staff_10', 'Staff
 bridge_list = ['vh_WIFI_Bridge_01', 'vh_WIFI_Bridge_02', 'vh_WIFI_Bridge_03', 'vh_WIFI_Bridge_04']
 
 
-#count = 0
+count = 0
 l = []
-j = '[]'
-json_file = json.loads(j)
-with open('record.json', 'w') as outfile:
-    outfile.write(j)
 try: 
     while (1):
 
-        window_in_seconds = 5
-        dt = str(int(time.time()-100))
-        df = str(int(dt)-window_in_seconds)
+        #window_in_seconds = 5
+        dt = str(int(time.time()))
+        df = str(int(dt)-70)
         #print('dt: ', dt)
         #print('df: ', df)
 
@@ -47,23 +43,20 @@ try:
                 except:
                     p[staff].append(0)
 
-        with open('record.json', 'r+') as outfile:
-            z = json.load(outfile)
-        z.append(p)
-        test = json.dumps(z, indent=2)
-        with open('record.json', 'w') as outfile:
-            outfile.write(test)
-
-        print(p)
+        for keys, values in p.items():
+            print(keys, str(values))
         for x in list(p.values()):
             l.append(x)
-        print(l)
+
+        #print(l)
+        count += 1
+        print(count)
         print(" ")
         time.sleep(10)
 
 except KeyboardInterrupt:
     file_name = str(datetime.datetime.now().strftime('%H%M'))
-    pd.DataFrame(l).to_excel('data_128/' + file_name + 'out.xlsx', index=False)
+    pd.DataFrame(l).to_excel('data_1213/' + file_name + '.xlsx', index=False)
 
 finally:
     print('\ndata stored in excel file.')

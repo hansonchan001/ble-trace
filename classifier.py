@@ -1,72 +1,58 @@
 import keras
 from keras.models import Sequential
 from keras.layers import Dense
+import keras.optimizers as opt
 import pandas as pd
 import numpy as np
+import handle_inside_data
 
 #prepare input data
-y = pd.read_excel('processedData/processed_out_1100.xlsx')
-a = pd.read_excel('processedData/processed_in_110223.xlsx')
-b = pd.read_excel('processedData/processed_in_110226.xlsx')
-c = pd.read_excel('processedData/processed_in_110232.xlsx')
+inside_data = pd.read_excel('processed_inside/114833.xlsx')
+outside_data = pd.read_excel('processed_outside/141235.xlsx')
 
-def changeToList(file):
-    n = []
-    for i in range(len(file)):
-        c = []
-        for j in range(len(file.iloc[0])):
-            c.append(file[j][i])
-            #print(x[i][j])
-        b = np.array(c)
-        n.append(b)
-    return n
+inside = handle_inside_data.changeToList(inside_data)
+outside = handle_inside_data.changeToList(outside_data)
 
-# 439 data for inside, 241 data for outside
-x_out = changeToList(y)
-x_in = changeToList(a)+changeToList(b)+changeToList(c)
+y_inside = []
+y_outside = []
+for i in range(len(inside)):
+    y_inside.append(1)
+for g in range(len(outside)):
+    y_outside.append(0)
 
-X_train = x_in[:420] + x_out[:-20]
-X_test = x_in[420:] + x_out[-20:]
+Y_train = y_inside[:1200] + y_outside[:-1000]
+Y_test = y_inside[1200:] + y_outside[-1000:]
+Y_train = np.array(Y_train)
+Y_test = np.array(Y_test)
+
+X_train = inside[:1200] + outside[:-1000]
+X_test = inside[1200:] + outside[-1000:]
 X_train = np.array(X_train)
 X_test = np.array(X_test)
-
-y_in = []
-y_out = []
-for i in range(len(x_in)):
-    y_in.append(1)
-for g in range(len(x_out)):
-    y_out.append(0)
-
-Y_train = y_in[:420] + y_out[:-20]
-Y_train = np.array(Y_train)
-Y_test = y_in[420:] + y_out[-20:]
-Y_test = np.array(Y_test)
 
 # configure NN
 classifier = Sequential()
 classifier.add(Dense(units = 16, activation = 'relu', input_dim = 4))
-classifier.add(Dense(units = 12, activation = 'relu'))
 classifier.add(Dense(units = 8, activation = 'relu'))
-classifier.add(Dense(units = 6, activation = 'relu'))
-classifier.add(Dense(units = 2, activation = 'sigmoid'))
+classifier.add(Dense(units = 4, activation = 'relu'))
+classifier.add(Dense(units = 1, activation = 'sigmoid'))
 
 classifier.compile(optimizer = 'adam', loss = 'binary_crossentropy')
 classifier.fit(X_train, Y_train, batch_size = 1, epochs = 1500, shuffle= True)
+opt = opt.Adam(learning_rate=0.001)
 
 Y_pred = classifier.predict(X_test)
-#Y_pred = [ 1 if y>=0.5 else 0 for y in Y_pred ]
-print(Y_pred)
-#print(len(Y_pred))
-for y in Y_pred:
+Y_pred_mirror = Y_pred
+
+for y in Y_pred_mirror:
     if y > 0.5:
         y = 1
     else:
         y = 0
-#print(Y_pred) 
 
-Y_pred = (np.rint(Y_pred)).astype(int)
+Y_pred= (np.rint(Y_pred)).astype(int)
 d = 0
 for p in range(len(Y_pred)):
-    if Y_pred[p][0] == Y_test[p][0]:
+    if Y_pred[p] == Y_test[p]:
         d += 1
 print(d/len(Y_pred)*100)

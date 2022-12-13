@@ -10,13 +10,12 @@ bridge_list = ['vh_WIFI_Bridge_01', 'vh_WIFI_Bridge_02', 'vh_WIFI_Bridge_03', 'v
 
 while(1):
     
-    df = str(int(time.time())-80)
+    df = str(int(time.time())-100)
     dt = str(int(time.time()))
-    print('dt"',dt)
-    print('df: ',df)
+    #print('dt:',dt)
+    #print('df: ',df)
     n = {}
     for v in bridge_list:
-
         a = {
             'b': v,
             'df':df,
@@ -34,9 +33,9 @@ while(1):
 
         n[v] = b
     
-    print(n)
-
- 
+    """ for key, values in n.items():
+        print(key + str(values))
+ """
     for c in staff_list:
         z = []
         for a in bridge_list:
