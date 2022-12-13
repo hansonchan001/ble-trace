@@ -20,7 +20,7 @@ try:
     while (1):
 
         window_in_seconds = 5
-        dt = str(int(time.time()-80))
+        dt = str(int(time.time()-100))
         df = str(int(dt)-window_in_seconds)
         #print('dt: ', dt)
         #print('df: ', df)
@@ -59,7 +59,7 @@ try:
             l.append(x)
         print(l)
         print(" ")
-        time.sleep(20)
+        time.sleep(10)
 
 except KeyboardInterrupt:
     file_name = str(datetime.datetime.now().strftime('%H%M'))
