@@ -13,7 +13,7 @@ topics = {
     'topic_4' : "iotdata/event/vh_WIFI_Bridge_04",
 }
 
-clients = [client_1, client_2, client_3, client_4]
+#clients = [client_1, client_2, client_3, client_4]
 
 # generate client ID with pub prefix randomly
 client_id_1 = f'python-mqtt-{random.randint(0, 1000)}'
@@ -40,50 +40,23 @@ device_mac = {
 
 
 
-def on_message_2(client, userdata, message):
-    income_msg = str(message.payload.decode("utf-8"))
-    if 'report' in income_msg:
-        mac = income_msg[income_msg.find('mac')+6:income_msg.find('mac')+18]
-        #print("received message: " ,device_mac[mac], 'vh_WIFI_Bridge_02')
-        if device_mac[mac] not in bridge_02:
-            bridge_02.append(device_mac[mac])
 
-def on_message_4(client, userdata, message):
-    income_msg = str(message.payload.decode("utf-8"))
-    if 'report' in income_msg:
-        mac = income_msg[income_msg.find('mac')+6:income_msg.find('mac')+18]
-        #print("received message: " ,device_mac[mac], 'vh_WIFI_Bridge_04')
-        if device_mac[mac] not in bridge_04:
-            bridge_04.append(device_mac[mac])
 
-def on_message_1(client, userdata, message):
-    income_msg = str(message.payload.decode("utf-8"))
-    if 'report' in income_msg:
-        mac = income_msg[income_msg.find('mac')+6:income_msg.find('mac')+18]
-        #print("received message: " ,device_mac[mac], 'vh_WIFI_Bridge_01')
-        if device_mac[mac] not in bridge_01:
-            bridge_01.append(device_mac[mac])
-
-def on_message_3(client, userdata, message):
+def on_message(client, userdata, message):
+    topic = str(message.topic)
     income_msg = str(message.payload.decode("utf-8"))
     if 'report' in income_msg:
         mac = income_msg[income_msg.find('mac')+6:income_msg.find('mac')+18]
         #print("received message: " ,device_mac[mac], 'vh_WIFI_Bridge_03')
         if device_mac[mac] not in bridge_03:
             bridge_03.append(device_mac[mac])
+        print('bridge3: ', bridge_03)
 
 def on_connect(client, userdata, flags, rc):
         if rc == 0:
             print("Connected to MQTT Broker!")
         else:
             print("Failed to connect, return code %d\n", rc)
-
-for client in clients:
-    client = mqtt.Client(client_id_4)
-    client.username_pw_set(username, password)
-    client.on_connect = on_connect
-    client.connect(mqttbroker, port)
-    client.loop_start()
     
 
 client_1 = mqtt.Client(client_id_1)
@@ -110,6 +83,13 @@ client_4.on_connect = on_connect
 client_4.connect(mqttbroker, port)
 client_4.loop_start()
 
+#get data with only one client
+""" client = mqtt.Client(client_id)
+client.username_pw_set(username, password)
+client.on_connect = on_connect
+client.connect(mqttbroker, port)
+client.loop_start() """
+
 client_1.subscribe(topic=topics['topic_1'])
 client_2.subscribe(topic=topics['topic_2'])
 client_3.subscribe(topic=topics['topic_3'])
@@ -124,4 +104,4 @@ while True:
     client_2.on_message=on_message_2 
     client_3.on_message=on_message_3 
     client_4.on_message=on_message_4 
-    time.sleep(5)
+    #time.sleep(5)
