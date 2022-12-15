@@ -13,8 +13,6 @@ topics = {
     'topic_4' : "iotdata/event/vh_WIFI_Bridge_04",
 }
 
-clients = [client_1, client_2, client_3, client_4]
-
 # generate client ID with pub prefix randomly
 client_id_1 = f'python-mqtt-{random.randint(0, 1000)}'
 client_id_2 = f'python-mqtt-{random.randint(0, 1000)}'
@@ -77,13 +75,6 @@ def on_connect(client, userdata, flags, rc):
             print("Connected to MQTT Broker!")
         else:
             print("Failed to connect, return code %d\n", rc)
-
-for client in clients:
-    client = mqtt.Client(client_id_4)
-    client.username_pw_set(username, password)
-    client.on_connect = on_connect
-    client.connect(mqttbroker, port)
-    client.loop_start()
     
 
 client_1 = mqtt.Client(client_id_1)

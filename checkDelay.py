@@ -10,7 +10,6 @@ bridge_list = ['vh_WIFI_Bridge_01', 'vh_WIFI_Bridge_02', 'vh_WIFI_Bridge_03', 'v
 
 while 1:
     for b in bridge_list:
-
         n = {
             'b': b,
             'df': str(int(time.time())-100),
@@ -19,8 +18,7 @@ while 1:
 
         d = requests.post(url, data = n)
         data = d.json()
-
-    #    print(n)
+        
         try:
             print(b + ' delay: ' + str(int(time.time())-int(data[-1]['datetime'])))
         except:

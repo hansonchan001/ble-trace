@@ -34,21 +34,24 @@ device_mac = {
 }
 
 def on_message(client, userdata, message):
-    wb1, wb2, wb3, wb4 = []
+    wb1, wb2, wb3, wb4 = [], [], [], []
+    print('on message')
     
     income_msg = str(message.payload.decode("utf-8"))
-    mac = income_msg[income_msg.find('mac')+6:income_msg.find('mac')+18]
-    
+    topic = str(message.topic)
+
     if 'report' in income_msg:
-
-        topic = str(message.topic)
-
-        if topic == topics['topic_1']:
-            if device_mac[mac] not in bridge:
-                wb1.append(device_mac[mac])
-
-                
-        #print("received message: " ,device_mac[mac], 'vh_WIFI_Bridge_03')
+        mac = income_msg[income_msg.find('mac')+6:income_msg.find('mac')+18]
+        if topic == topics['topic_1'] and device_mac[mac] not in wb1:
+            wb1.append(device_mac[mac])
+        elif topic == topics['topic_2'] and device_mac[mac] not in wb2:
+            wb2.append(device_mac[mac])
+        elif topic == topics['topic_3'] and device_mac[mac] not in wb3:
+            wb3.append(device_mac[mac])
+        elif topic == topics['topic_4'] and device_mac[mac] not in wb4:
+            wb4.append(device_mac[mac])
+    
+    print(wb1, wb2, wb3, wb4)
 
 
 def on_connect(client, userdata, flags, rc):
@@ -70,5 +73,4 @@ client.subscribe(topic=topics['topic_3'])
 client.subscribe(topic=topics['topic_4'])
 
 while True:
-    bridge = []
     client.on_message=on_message 
