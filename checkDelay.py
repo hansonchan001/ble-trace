@@ -12,13 +12,13 @@ while 1:
     for b in bridge_list:
         n = {
             'b': b,
-            'df': str(int(time.time())-100),
+            'df': str(int(time.time())-120),
             'dt': str(int(time.time())),
             }
 
         d = requests.post(url, data = n)
         data = d.json()
-        
+
         try:
             print(b + ' delay: ' + str(int(time.time())-int(data[-1]['datetime'])))
         except:
