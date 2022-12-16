@@ -4,26 +4,13 @@ from keras.layers import Dense
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
-
 #prepare input data
-
-def changeToList(file):
-    n = []
-    for i in range(len(file)):
-        c = []
-        for j in range(len(file.iloc[0])):
-            c.append(file[j][i])
-            #print(x[i][j])
-        b = np.array(c)
-        n.append(b)
-
-    return n
-
+#prepare input data
 inside_data = pd.read_excel('processed_inside/114833.xlsx')
 outside_data = pd.read_excel('processed_outside/141235.xlsx')
 
-inside = changeToList(inside_data)
-outside = changeToList(outside_data)
+inside = handle_inside_data.changeToList(inside_data)
+outside = handle_inside_data.changeToList(outside_data)
 
 y_inside = []
 y_outside = []
