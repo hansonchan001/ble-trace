@@ -37,8 +37,6 @@ Y_test = y_inside[1500:] + y_outside[-100:]
 X_train = inside[:1500] + outside[:-100]
 X_test = inside[1500:] + outside[-100:]
 
-
-
 X_train = np.array(X_train)
 X_test = np.array(X_test)
 Y_train = np.array(Y_train)
