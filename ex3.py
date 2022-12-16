@@ -34,5 +34,6 @@ X_test = inside[1500:] + outside[-100:]
 X_test = np.array(X_test)
 
 model = keras.models.load_model('models/model_5')
-loss, accuracy = model.evaluate(X_test, Y_test)
+#loss, accuracy = model.evaluate(X_test, Y_test)
 #print(model)
+m
