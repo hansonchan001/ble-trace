@@ -9,8 +9,18 @@ import matplotlib.pyplot as plt
 inside_data = pd.read_excel('processed_inside/114833.xlsx')
 outside_data = pd.read_excel('processed_outside/141235.xlsx')
 
-inside = handle_inside_data.changeToList(inside_data)
-outside = handle_inside_data.changeToList(outside_data)
+def changeToList(file):
+    n = []
+    for i in range(len(file)):
+        c = []
+        for j in range(len(file.iloc[0])):
+            c.append(file[j][i])
+            #print(x[i][j])
+        b = np.array(c)
+        n.append(b)
+
+inside =  changeToList(inside_data)
+outside = changeToList(outside_data)
 
 y_inside = []
 y_outside = []
