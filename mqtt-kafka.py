@@ -13,7 +13,7 @@ kafka_producer = kafka_topic.get_sync_producer()
 def on_message(client, userdata, message):
     msg_payload = str(message.payload)
     print("Received MQTT message: ", msg_payload)
-    kafka_producer.produce(msg_payload.encode('ascii'))
+    kafka_producer.produce(msg_payload, timestamp=time.time(), )
     print("KAFKA: Just published " + msg_payload + " to topic temperature2")
 
 mqtt_client.loop_start()
