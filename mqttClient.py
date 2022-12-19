@@ -1,10 +1,14 @@
 import paho.mqtt.client as mqtt
 import time
 import random
+import json
 
 #mqttbroker = '47.243.181.95'
 mqttbroker = 'iot.rodsum.com'
 port = 1883
+
+count = 0
+m = {}
 
 topics = {
     'topic_1' : "iotdata/event/vh_WIFI_Bridge_01",
@@ -28,36 +32,44 @@ device_mac = {
 }
 
 def on_message(client, userdata, message):
-    #wb1, wb2, wb3, wb4 = [], [], [], []
-    data = {
-        'wb1': [],
-        'wb2': [],
-        'wb3': [],
-        'wb4': [],
-    }
-    print('on message')
+
+    global m, count
     
     income_msg = str(message.payload.decode("utf-8"))
     topic = str(message.topic)
+    data = json.loads(income_msg)
 
-    if 'report' in income_msg:
-        
-        mac = income_msg[income_msg.find('mac')+6:income_msg.find('mac')+18]
-        
-        if topic == topics['topic_1'] and device_mac[mac] not in data['wb1']:
-            data['wb1'].append(device_mac[mac])
-        
-        elif topic == topics['topic_2'] and device_mac[mac] not in data['wb2']:
-            data['wb2'].append(device_mac[mac])
-        
-        elif topic == topics['topic_3'] and device_mac[mac] not in data['wb3']:
-            data['wb3'].append(device_mac[mac])
-        
-        elif topic == topics['topic_4'] and device_mac[mac] not in data['wb4']:
-            data['wb4'].append(device_mac[mac])
-    
-    print(data)
+    try:
+        rssi1m = data['ibeacon']['rssi1m']
+        rssi = data['rssi']
+        N = 4 #low strength
+        distance = round(10**((int(rssi1m)-int(rssi))/(10*N)), 2)
+        #print(rssi1m, ' ', rssi, ' ', distance)
+        #print(income_msg)
 
+        if device_mac[data['mac']] not in m:
+            m[device_mac[data['mac']]] = []
+            m[device_mac[data['mac']]].append(distance)
+            
+        else:
+            m[device_mac[data['mac']]].append(distance)
+
+    except:
+        print(" ")
+
+    #print(m)
+
+    count += 1
+    if count%50 == 0:
+
+        for x in m:
+           m[x] = round(sum(m[x])/len(m[x]), 2)
+
+        m_sorted = dict(sorted(m.items(), key=lambda x:x[0]))
+        print(m_sorted)
+        count = 0
+        print(int(time.time())-int(data['ts']))
+        m = {}
 
 def on_connect(client, userdata, flags, rc):
         if rc == 0:
@@ -79,3 +91,4 @@ client.subscribe(topic=topics['topic_4'])
 
 while True:
     client.on_message=on_message 
+    

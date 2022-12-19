@@ -39,8 +39,11 @@ suffled_data = {'input': X_train,
 df= pd.DataFrame(suffled_data)
 df = df.sample(frac = 1)
 
-X = np.array(df['input'].values.tolist())
-Y = np.array(df['output'].values.tolist())
+X_test = df['input'].values.tolist()
+Y_test = df['output'].values.tolist()
+
+X = np.array(X_test[:20])
+Y = np.array(Y_test[:-20])
 
 classifier = Sequential()
 classifier.add(Dense(units = 8, activation = 'relu', input_dim = 4))
