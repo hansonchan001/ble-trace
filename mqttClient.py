@@ -48,6 +48,8 @@ def on_message(client, userdata, message):
 
         if device_mac[data['mac']] not in m:
             m[device_mac[data['mac']]] = []
+            if topic == topics['topic_1']:
+                print(data)
             m[device_mac[data['mac']]].append(distance)
             
         else:
@@ -73,9 +75,8 @@ def on_message(client, userdata, message):
         for x in m:
            m[x] = round(sum(m[x])/len(m[x]), 2)
         m_sorted = dict(sorted(m.items(), key=lambda x:x[0]))
-        kafka_producer.produce(str(example).encode('ascii'))
-        print("KAFKA: Just published to topic DEVBLE")
         print(int(time.time())-int(data['ts']))
+        print(m)
         count = 0
         m = {}
 
@@ -96,10 +97,6 @@ client.subscribe(topic=topics['topic_1'])
 client.subscribe(topic=topics['topic_2'])
 client.subscribe(topic=topics['topic_3'])
 client.subscribe(topic=topics['topic_4'])
-
-kafka_client = KafkaClient(hosts="47.243.55.194:9092")
-kafka_topic = kafka_client.topics['DEVBLE']
-kafka_producer = kafka_topic.get_sync_producer()
 
 while True:
     client.on_message=on_message 

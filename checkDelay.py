@@ -12,7 +12,7 @@ while 1:
     for b in bridge_list:
         n = {
             'b': b,
-            'df': str(int(time.time())-120),
+            'df': str(int(time.time())-100),
             'dt': str(int(time.time())),
             }
 
@@ -20,7 +20,12 @@ while 1:
         data = d.json()
 
         try:
-            print(b + ' delay: ' + str(int(time.time())-int(data[-1]['datetime'])))
+            m=[]
+            for e in data:
+                m.append(e['datetime'])
+            m.sort()
+            print(b + ' delay: ' + str(int(time.time())-int(m[-1])))
+        
         except:
             print('no data')
     print('current unix time: ' + str(int(time.time())))

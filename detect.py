@@ -58,6 +58,7 @@ while True:
             
 
     ######  send MQ message to Kafka    ########
+    
     message =  {
         "ZoneCode": "HSK1A01",
         "TotalNumber": str(len(in_zone)),
@@ -66,7 +67,7 @@ while True:
     }
 
     future = producer.send(
-        'test',
+        'DEVBLE',
         key='mytopic',
         value = message,
         partition=0

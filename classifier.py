@@ -33,6 +33,7 @@ for g in range(len(outside)):
 Y_train = y_inside+ y_outside
 X_train = inside + outside
 
+
 suffled_data = {'input': X_train, 
                 'output': Y_train}
 
