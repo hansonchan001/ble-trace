@@ -13,11 +13,19 @@ url = 'http://iot.rodsum.com/api/getlocationdetection'
 staff_list = ['Staff_03', 'Staff_04', 'Staff_06', 'Staff_08', 'Staff_10', 'Staff_01', 'Staff_02', 'Staff_05', 'Staff_07', 'Staff_09']
 bridge_list = ['vh_WIFI_Bridge_01', 'vh_WIFI_Bridge_02', 'vh_WIFI_Bridge_03', 'vh_WIFI_Bridge_04']
 
+#load pre-trained model to do classification
 model = keras.models.load_model('models/model_8')
 
+producer=KafkaProducer(
+        bootstrap_servers = ['47.243.55.194:9092'], 
+        key_serializer=lambda k:json.dumps(k).encode(), 
+        value_serializer=lambda v: json.dumps(v).encode()
+    )
+
 while True:
+
     dt = str(int(time.time()))
-    df = str(int(dt)-70)
+    df = str(int(dt)-100)
     
     p = {}
     for staff in staff_list:
@@ -53,37 +61,27 @@ while True:
             print(staff, ' is out of the zone')
 
     ######  send MQ message to Kafka    ########
-    producer=KafkaProducer(
-        bootstrap_servers = ['47.243.55.194:9092'], 
-        key_serializer=lambda k:json.dumps(k).encode(), 
-        value_serializer=lambda v: json.dumps(v).encode()
-    )
-    
-    example =  {
+    message =  {
         "ZoneCode": "HSK1A01",
-        "TotalNumber": "6",
-        "TagList":
-        [
-            "staff_01",
-            "staff_02",
-            "staff_03",
-        ],
-        "Timestamp": "1669252729"
+        "TotalNumber": str(len(in_zone)),
+        "TagList": in_zone,
+        "Timestamp": str(int(time.time()))
     }
-    
+
     future = producer.send(
         'test',
         key='mytopic',
-        value = example,
+        value = message,
         partition=0
     )
-    
-    print("send {}".format(str(example)))
-    
+
+    print("send {}".format(str(message)))
+
     try:
         future.get(timeout=10)
-    except kafka_errors:
+    except :
         traceback.format_exc()
+
     #### finsihed sending MQ message to Kafka #######
     
 
