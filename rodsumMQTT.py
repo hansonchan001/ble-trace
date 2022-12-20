@@ -5,12 +5,9 @@ import time
 
 from paho.mqtt import client as mqtt_client
 
-
-#broker = '192.168.99.33'
 broker = 'iot.rodsum.com'
 port = 1883
 topic = "iotdata"
-# generate client ID with pub prefix randomly
 client_id = f'python-mqtt-{random.randint(0, 1000)}'
 username = 'rswdemo'
 password = 'demorsw'

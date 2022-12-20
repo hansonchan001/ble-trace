@@ -1,59 +1,100 @@
-# python 3.6
-
-import random
+import paho.mqtt.client as mqtt
+from pykafka import KafkaClient
 import time
+import random
+import json
 
-from paho.mqtt import client as mqtt_client
-
-broker = 'iot.rodsum.com'
+#mqttbroker = '47.243.55.194:9092'
+mqttbroker = 'iot.rodsum.com'
 port = 1883
-topic = "iotdata"
-client_id = f'python-mqtt-{random.randint(0, 1000)}'
 username = 'rswdemo'
 password = 'demorsw'
+client_id = f'python-mqtt-{random.randint(0, 1000)}'
 
-def connect_mqtt():
-    def on_connect(client, userdata, flags, rc):
+count = 0
+m = {}
+
+bridge = {
+    "iotdata/event/vh_WIFI_Bridge_01": 'bridge_1',
+    "iotdata/event/vh_WIFI_Bridge_02": 'bridge_2',
+    "iotdata/event/vh_WIFI_Bridge_03": 'bridge_3',
+    "iotdata/event/vh_WIFI_Bridge_04": 'bridge_4',
+}
+
+device = {
+    'D28A744F4C81': 'staff_10','E8ABCCA7945D': 'staff_03',
+    'C5CD4CF0E65C': 'staff_04','FF45CE6F4BD8': 'staff_06',
+    'F1B636C0956E': 'staff_08','C729D2661CE4': 'staff_02',
+    'C61777F0D7F8': 'staff_09','E21174FAF5B8': 'staff_01',
+    'E5F45951535D': 'staff_05','E05F56833E68': 'staff_07',
+}
+
+def on_message(client, userdata, message):
+
+    global m, count
+    income_msg = str(message.payload.decode("utf-8"))
+    wb = bridge[str(message.topic)]
+    #print(income_msg)
+    #print(wb)
+
+    try:
+        data = json.loads(income_msg)
+        rssi1m = data['ibeacon']['rssi1m']
+        rssi = data['rssi']
+        N = 4 #low strength
+        distance = round(10**((int(rssi1m)-int(rssi))/(10*N)), 2)
+        
+        if wb not in m.keys():
+            m[wb] = {}
+
+        staff = device[data['mac']]
+        #print(m)
+        #print(staff)
+        #print(distance)
+ 
+        k = {staff:[distance]}
+
+        if staff not in m[wb].keys():
+            m[wb][staff] = []
+            m[wb][staff].append(distance)
+        else:
+            m[wb][staff].append(distance)
+
+
+    except:
+        print("no data")
+
+    count += 1
+    if count % 50 == 0: 
+        #m_sorted = dict(sorted(m.items(), key=lambda x:x[0]))
+        print(int(time.time())-int(data['ts']))
+        for b in m:
+            for s in m[b].keys():
+                a = round(sum(m[b][s])/len(m[b][s]), 2)
+                m[b][s] = a
+        for b in m:
+            print(b)
+            print(m[b])
+        count = 0
+        m = {}
+
+def on_connect(client, userdata, flags, rc):
         if rc == 0:
             print("Connected to MQTT Broker!")
         else:
             print("Failed to connect, return code %d\n", rc)
 
-    client = mqtt_client.Client(client_id)
-    client.username_pw_set(username, password)
-    client.on_connect = on_connect
-    client.connect(broker, port)
-    return client
+client = mqtt.Client(client_id)
+client.username_pw_set(username, password)
+client.on_connect = on_connect
+client.connect(mqttbroker, port)
+client.loop_start()
 
+client.subscribe(topic="iotdata/event/vh_WIFI_Bridge_01")
+client.subscribe(topic="iotdata/event/vh_WIFI_Bridge_02")
+client.subscribe(topic="iotdata/event/vh_WIFI_Bridge_03")
+client.subscribe(topic="iotdata/event/vh_WIFI_Bridge_04")
 
-def publish(client):
-    msg_count = 0
-    while True:
-        time.sleep(1)
-        msg = f"messages: {msg_count}"
-        result = client.publish(topic, msg)
-        # result: [0, 1]
-        status = result[0]
-        if status == 0:
-            print(f"Send `{msg}` to topic `{topic}`")
-        else:
-            print(f"Failed to send message to topic {topic}")
-        msg_count += 1
-
-        client.subscribe('iotdata/devices/F4CFA264B864')
-        client.on_message=on_message
-
-def on_message(client, userdata, message):
-    income_msg = str(message.payload.decode("utf-8"))
-    print("received message: " ,income_msg)
-
-
-def run():
-    client = connect_mqtt()
-    client.loop_start()
-    publish(client)
-
-
-if __name__ == '__main__':
-    run()
+while True:
+    client.on_message=on_message 
     
