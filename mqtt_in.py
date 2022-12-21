@@ -3,6 +3,8 @@ from pykafka import KafkaClient
 import time
 import random
 import json
+import pandas as pd
+import datetime
 
 #mqttbroker = '47.243.55.194:9092'
 mqttbroker = 'iot.rodsum.com'
@@ -35,6 +37,8 @@ def on_message(client, userdata, message):
     global m, l, count
     income_msg = str(message.payload.decode("utf-8"))
     wb = bridge[str(message.topic)]
+    #print(income_msg)
+    #print(wb)
 
     try:
         data = json.loads(income_msg)
@@ -73,7 +77,7 @@ def on_message(client, userdata, message):
         for i in m_sorted:
             a = dict(sorted(m[i].items(), key=lambda x:x[0]))
             k[i] = a
-        print(k, '\n')
+        #print(k, '\n')
         
         p={}
         for bg in k:
@@ -117,6 +121,13 @@ client.subscribe(topic="iotdata/event/vh_WIFI_Bridge_02")
 client.subscribe(topic="iotdata/event/vh_WIFI_Bridge_03")
 client.subscribe(topic="iotdata/event/vh_WIFI_Bridge_04")
 
-while True:
-    client.on_message=on_message 
-    
+try:
+    while True:
+        client.on_message=on_message 
+
+except KeyboardInterrupt:
+    file_name = str(datetime.datetime.now().strftime('%H%M'))
+    pd.DataFrame(l).to_excel('data_1222/data_mq_i/' + file_name + '.xlsx', index=False)
+
+finally:
+    print('\ndata stored in excel file.')

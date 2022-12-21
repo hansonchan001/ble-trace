@@ -60,7 +60,8 @@ def on_message(client, userdata, message):
         
 
     except:
-        print("no data")
+        #print("no data")
+        pass
 
     count += 1
     if count % 150 == 0: 
@@ -77,7 +78,7 @@ def on_message(client, userdata, message):
         for i in m_sorted:
             a = dict(sorted(m[i].items(), key=lambda x:x[0]))
             k[i] = a
-        print(k, '\n')
+        #print(k, '\n')
         
         p={}
         for bg in k:
@@ -96,11 +97,14 @@ def on_message(client, userdata, message):
 
         p = dict(sorted(p.items()))
 
+        for key, value in p.items():
+            print(key, value)
+
         for x in list(p.values()):
             l.append(x)
 
                 
-        print(p, '\n')
+        print('\n')
         count = 0
         m = {}
 
@@ -127,7 +131,7 @@ try:
 
 except KeyboardInterrupt:
     file_name = str(datetime.datetime.now().strftime('%H%M'))
-    pd.DataFrame(l).to_excel('data_1222/data_o_mq/' + file_name + '.xlsx', index=False)
+    pd.DataFrame(l).to_excel('data_1222/data_mq_o/' + file_name + '_wall.xlsx', index=False)
 
 finally:
     print('\ndata stored in excel file.')

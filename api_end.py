@@ -15,11 +15,8 @@ l = []
 try: 
     while (1):
 
-        #window_in_seconds = 5
         dt = str(int(time.time()))
         df = str(int(dt)-70)
-        #print('dt: ', dt)
-        #print('df: ', df)
 
         p = {}
         for staff in staff_list:
@@ -56,7 +53,7 @@ try:
 
 except KeyboardInterrupt:
     file_name = str(datetime.datetime.now().strftime('%H%M'))
-    pd.DataFrame(l).to_excel('data_1222/data_inside/' + file_name + '.xlsx', index=False)
+    pd.DataFrame(l).to_excel('data_1222/data_api_out/' + file_name + '_api.xlsx', index=False)
 
 finally:
     print('\ndata stored in excel file.')
