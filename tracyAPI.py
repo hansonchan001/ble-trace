@@ -21,7 +21,7 @@ m=[]
 for e in data:
     m.append(e['datetime'])
 m.sort()
-print(m)
+#print(m)
 
 print('now: ', str(int(time.time())))
 print('last timestamp: ', m[-1])

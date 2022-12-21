@@ -25,7 +25,7 @@ producer=KafkaProducer(
 while True:
 
     dt = str(int(time.time()))
-    df = str(int(dt)-100)
+    df = str(int(dt)-80)
     
     p = {}
     for staff in staff_list:
@@ -58,7 +58,7 @@ while True:
             
 
     ######  send MQ message to Kafka    ########
-    
+
     message =  {
         "ZoneCode": "HSK1A01",
         "TotalNumber": str(len(in_zone)),
