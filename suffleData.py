@@ -17,8 +17,8 @@ def changeToList(file):
 
     return n
 
-inside_data = pd.read_excel('processed_inside/114833.xlsx')
-outside_data = pd.read_excel('processed_outside/141235.xlsx')
+inside_data = pd.read_excel('processed_inside/12231136.xlsx')
+outside_data = pd.read_excel('processed_outside/12231123.xlsx')
 
 inside = changeToList(inside_data)
 outside = changeToList(outside_data)
@@ -44,9 +44,7 @@ Y = np.array(df['output'].values.tolist())
 
 classifier = Sequential()
 classifier.add(Dense(units = 8, activation = 'relu', input_dim = 4))
-#classifier.add(Dense(units = 8, activation = 'relu'))
 classifier.add(Dense(units = 4, activation = 'relu'))
-#classifier.add(Dense(units = 2, activation = 'relu'))
 classifier.add(Dense(units = 1, activation = 'sigmoid'))
 
 classifier.compile(optimizer = 'adam', loss = 'binary_crossentropy', metrics=['accuracy'])

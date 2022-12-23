@@ -5,7 +5,7 @@ from os import walk
 
 #turn all files to list then drop zero at once
 
-dir = 'data_out_1215'
+dir = 'data_1222/data_mq_o'
 
 
 def changeToList(file):
@@ -30,10 +30,11 @@ for file in f:
     x += changeToList(a)
 
 x = pd.DataFrame(x)
-df = x.loc[(x != 0).any(axis=1)]
-#df = x.loc[(x != 0).all(1)]
+x = x.loc[(x != 0).any(axis=1)]
+df = x.loc[(x != 0).all(1)]
+df = df.dropna(axis=0, how='any')
 
-fileName = str(datetime.datetime.now().strftime('%H%M%S'))
+fileName = str(datetime.datetime.now().strftime('%m%d%H%M'))
 pd.DataFrame(df).to_excel('processed_outside/' + fileName + '.xlsx', index=False)
 
 x = np.array(x)

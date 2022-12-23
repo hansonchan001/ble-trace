@@ -1,8 +1,8 @@
-import keras
 from keras.models import Sequential
 from keras.layers import Dense
 import pandas as pd
 import numpy as np
+import datetime
 import matplotlib.pyplot as plt
 
 def changeToList(file):
@@ -17,8 +17,8 @@ def changeToList(file):
 
     return n
 
-inside_data = pd.read_excel('processed_inside/114833.xlsx')
-outside_data = pd.read_excel('processed_outside/141235.xlsx')
+inside_data = pd.read_excel('processed_inside/12231136.xlsx')
+outside_data = pd.read_excel('processed_outside/12231442.xlsx')
 
 inside = changeToList(inside_data)
 outside = changeToList(outside_data)
@@ -43,16 +43,24 @@ df = df.sample(frac = 1)
 X_test = df['input'].values.tolist()
 Y_test = df['output'].values.tolist()
 
-X = np.array(X_test[:20])
-Y = np.array(Y_test[:-20])
+X = np.array(X_test[:-500])
+Y = np.array(Y_test[:-500])
 
 classifier = Sequential()
 classifier.add(Dense(units = 8, activation = 'relu', input_dim = 4))
 classifier.add(Dense(units = 4, activation = 'relu'))
+classifier.add(Dense(units = 2, activation = 'relu'))
 classifier.add(Dense(units = 1, activation = 'sigmoid'))
-classifier.compile(optimizer = 'adam', loss = 'binary_crossentropy', metrics=['accuracy'])
 
+classifier.compile(optimizer = 'adam', loss = 'binary_crossentropy', metrics=['accuracy'])
 history = classifier.fit(X, Y, validation_split = 0.2, batch_size = 1, epochs = 500, shuffle= True)
+
+X_Eva = np.array(X_test[500:])
+Y_Eva = np.array(Y_test[500:])
+loss, accuracy = classifier.evaluate(X_Eva, Y_Eva)
+
+model_name = str(datetime.datetime.now().strftime('%m%d%H%M'))
+classifier.save('models/model_' + model_name)
 
 print(history.history.keys())
 # summarize history for accuracy
