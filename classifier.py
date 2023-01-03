@@ -53,8 +53,9 @@ classifier.add(Dense(units = 2, activation = 'relu'))
 classifier.add(Dense(units = 1, activation = 'sigmoid'))
 
 classifier.compile(optimizer = 'adam', loss = 'binary_crossentropy', metrics=['accuracy'])
-history = classifier.fit(X, Y, validation_split = 0.2, batch_size = 1, epochs = 500, shuffle= True)
+history = classifier.fit(X, Y, validation_split = 0.2, batch_size = 1, epochs = 750, shuffle= True)
 
+#evaluate the model
 X_Eva = np.array(X_test[500:])
 Y_Eva = np.array(Y_test[500:])
 loss, accuracy = classifier.evaluate(X_Eva, Y_Eva)
@@ -63,8 +64,26 @@ model_name = str(datetime.datetime.now().strftime('%m%d%H%M'))
 classifier.save('models/model_' + model_name)
 
 print(history.history.keys())
+
+fig, (ax1, ax2) = plt.subplots(1,2)
+ax1.plot(history.history['accuracy'])
+ax1.plot(history.history['val_accuracy'])
+ax1.set_title('model accuracy')
+ax1.set(xlabel='epoch', ylabel='accuracy')
+ax1.legend(['train', 'test'], loc='upper left')
+ax2.plot(history.history['loss'])
+ax2.plot(history.history['val_loss'])
+ax2.set_title('model loss')
+ax2.set(xlabel='epoch')
+ax2.legend(['train', 'test'], loc='upper left')
+
+ax2.label_outer()
+
+
+
+
 # summarize history for accuracy
-plt.plot(history.history['accuracy'])
+""" plt.plot(history.history['accuracy'])
 plt.plot(history.history['val_accuracy'])
 plt.title('model accuracy')
 plt.ylabel('accuracy')
@@ -78,4 +97,4 @@ plt.title('model loss')
 plt.ylabel('loss')
 plt.xlabel('epoch')
 plt.legend(['train', 'test'], loc='upper left')
-plt.show()
+plt.show() """
