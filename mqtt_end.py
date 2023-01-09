@@ -9,8 +9,8 @@ import datetime
 #mqttbroker = '47.243.55.194:9092'
 mqttbroker = 'iot.rodsum.com'
 port = 1883
-username = 'rswdemo'
-password = 'demorsw'
+username = 'vhsoft'
+password = 'soft_vh'
 client_id = f'python-mqtt-{random.randint(0, 1000)}'
 
 count = 0

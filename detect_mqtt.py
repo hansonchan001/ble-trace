@@ -12,8 +12,8 @@ import random
 #mqtt client details
 mqttbroker = 'iot.rodsum.com'
 port = 1883
-username = 'rswdemo'
-password = 'demorsw'
+username = 'vhsoft'
+password = 'soft_vh'
 client_id = f'python-mqtt-{random.randint(0, 1000)}'
 
 count = 0
@@ -69,10 +69,12 @@ def on_message(client, userdata, message):
         
 
     except:
-        print("no data")
+        #filter out events besides "detect"
+        #print("not detect event")
+        pass
 
     count += 1
-    if count % 150 == 0: 
+    if count % 1000 == 0: #when it collects 150 data
         print('delay: ', str(int(time.time())-int(data['ts'])))
         for b in m:
             for s in m[b].keys():
@@ -86,7 +88,7 @@ def on_message(client, userdata, message):
         for i in m_sorted:
             a = dict(sorted(m[i].items(), key=lambda x:x[0]))
             k[i] = a
-        print(k, '\n')
+        #print(k, '\n')
         
         p={}
         for bg in k:
@@ -104,18 +106,44 @@ def on_message(client, userdata, message):
                     p[staff].append(0)
 
         p = dict(sorted(p.items()))
-                
-        print(p, '\n')
+
+        for u, e in p.items():
+            print(u, e)
         count = 0
         m = {}
 
         in_zone = []
 
         for staff, positions in p.items():
-            result = model.predict(np.array([positions]))
-            if result > 0.5:
-                in_zone.append(staff)
+            
+            if 0 in positions:
+                continue
+            else:
+                try:
+                    result = model.predict(np.array([positions]))
+                    if result > 0.5:
+                        in_zone.append(staff)
+                except:
+                    print("cannot input to model, one of the bridges maybe offline")
+                    
+                    message =  {
+                        "Error": 0,
+                        "Timestamp": int(time.time())
+                    }
 
+                    future = producer.send(
+                        'DEVBLE',
+                        key='mytopic',
+                        value = message,
+                        partition=0
+                    )
+
+                    print("send {}\n".format(str(message)))
+        
+                    try:
+                        future.get(timeout=10)
+                    except :
+                        traceback.format_exc()
 
         ######  send MQ message to Kafka    ########
 
@@ -123,7 +151,7 @@ def on_message(client, userdata, message):
             "ZoneCode": "HSK1A01",
             "TotalNumber": str(len(in_zone)),
             "TagList": in_zone,
-            "Timestamp": str(int(time.time()))
+            "Timestamp": int(time.time())
         }
 
         future = producer.send(
@@ -133,7 +161,10 @@ def on_message(client, userdata, message):
             partition=0
         )
 
-        print("send {}".format(str(message)))
+        print("send {}\n".format(str(message)))
+
+        if (message["TotalNumber"] == '0'):
+            print("no staff is in the zone")
 
         try:
             future.get(timeout=10)
@@ -141,6 +172,7 @@ def on_message(client, userdata, message):
             traceback.format_exc()
 
         #### finsihed sending MQ message to Kafka #######
+    
     
 
 def on_connect(client, userdata, flags, rc):
@@ -161,8 +193,7 @@ client.subscribe(topic="iotdata/event/vh_WIFI_Bridge_03")
 client.subscribe(topic="iotdata/event/vh_WIFI_Bridge_04")
 
 while True:
-
-    client.on_message=on_message  
-
+    client.on_message=on_message
+    time.sleep(0.2)
     
 

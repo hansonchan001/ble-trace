@@ -53,7 +53,7 @@ classifier.add(Dense(units = 2, activation = 'relu'))
 classifier.add(Dense(units = 1, activation = 'sigmoid'))
 
 classifier.compile(optimizer = 'adam', loss = 'binary_crossentropy', metrics=['accuracy'])
-history = classifier.fit(X, Y, validation_split = 0.2, batch_size = 1, epochs = 750, shuffle= True)
+history = classifier.fit(X, Y, validation_split = 0.2, batch_size = 1, epochs = 1000, shuffle= True)
 
 #evaluate the model
 X_Eva = np.array(X_test[500:])

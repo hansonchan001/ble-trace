@@ -14,7 +14,7 @@ staff_list = ['Staff_01', 'Staff_02', 'Staff_04', 'Staff_05', 'Staff_06', 'Staff
 bridge_list = ['vh_WIFI_Bridge_01', 'vh_WIFI_Bridge_02', 'vh_WIFI_Bridge_03', 'vh_WIFI_Bridge_04']
 
 #load pre-trained model to do classification
-model = keras.models.load_model('models/model_8')
+model = keras.models.load_model('models/model_01031429')
 
 producer=KafkaProducer(
         bootstrap_servers = ['47.243.55.194:9092'], 
@@ -48,13 +48,20 @@ while True:
                 p[staff].append(distance)
             except:
                 p[staff].append(0)
-
+    print(p)
     in_zone = []
 
     for staff, positions in p.items():
-        result = model.predict(np.array([positions]))
-        if result > 0.5:
-            in_zone.append(staff)
+        if 0 in positions:
+                continue
+        else:
+            try:
+                result = model.predict(np.array([positions]))
+                if result > 0.5:
+                    in_zone.append(staff)
+            except:
+                print("cannot input to model")
+                continue
             
 
     ######  send MQ message to Kafka    ########

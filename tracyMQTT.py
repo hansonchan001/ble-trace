@@ -23,7 +23,8 @@ bridge = {
 }
 
 device = {
-    'D28A744F4C81': 'staff_10','E8ABCCA7945D': 'staff_03',
+    #'D28A744F4C81': 'staff_10',
+    'E8ABCCA7945D': 'staff_03',
     'C5CD4CF0E65C': 'staff_04','FF45CE6F4BD8': 'staff_06',
     'F1B636C0956E': 'staff_08','C729D2661CE4': 'staff_02',
     'C61777F0D7F8': 'staff_09','E21174FAF5B8': 'staff_01',
@@ -56,10 +57,10 @@ def on_message(client, userdata, message):
         
 
     except:
-        print("no data")
+        pass
 
     count += 1
-    if count % 150 == 0: 
+    if count % 1000 == 0: 
         print('delay: ', str(int(time.time())-int(data['ts'])))
         for b in m:
             for s in m[b].keys():
@@ -73,8 +74,9 @@ def on_message(client, userdata, message):
         for i in m_sorted:
             a = dict(sorted(m[i].items(), key=lambda x:x[0]))
             k[i] = a
-        print(k, '\n')
-        
+        #print(k, '\n')
+        for i, u in k.items():
+            print(i, u)
         p={}
         for bg in k:
             for staff in k[bg]:
@@ -95,8 +97,11 @@ def on_message(client, userdata, message):
         for x in list(p.values()):
             l.append(x)
 
+        print("")
                 
-        print(p, '\n')
+        #print(p, '\n')
+        for j, k in p.items():
+            print(j, k)
         count = 0
         m = {}
 
