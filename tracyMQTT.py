@@ -32,6 +32,9 @@ device = {
     'E5F45951535D': 'staff_05','E05F56833E68': 'staff_07',
 }
 
+for wb in bridge:
+        m[wb] = {}
+
 def on_message(client, userdata, message):
 
     global m, l, count
@@ -45,9 +48,9 @@ def on_message(client, userdata, message):
         N = 4 #low strength
         distance = round(10**((int(rssi1m)-int(rssi))/(10*N)), 2)
         
-        if wb not in m.keys():
+        """ if wb not in m.keys():
             m[wb] = {}
-
+ """
         staff = device[data['mac']]
 
         if staff not in m[wb].keys():
@@ -65,8 +68,11 @@ def on_message(client, userdata, message):
         print('delay: ', str(int(time.time())-int(data['ts'])))
         for b in m:
             for s in m[b].keys():
-                a = round(sum(m[b][s])/len(m[b][s]), 2)
-                m[b][s] = a
+                try:
+                    a = round(sum(m[b][s])/len(m[b][s]), 2)
+                    m[b][s] = a
+                except:
+                    pass
 
 
         m_sorted = dict(sorted(m.items(), key=lambda x:x[0]))

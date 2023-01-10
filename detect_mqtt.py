@@ -43,16 +43,14 @@ producer=KafkaProducer(
         value_serializer=lambda v: json.dumps(v).encode()
     )
 
-for wb in bridge:
+for wb in bridge.values():
         m[wb] = {}
 
 def on_message(client, userdata, message):
 
     global m, l, count
     income_msg = str(message.payload.decode("utf-8"))
-    #wb = bridge[str(message.topic)]
-
-    
+    wb = bridge[str(message.topic)]
 
     try:
         data = json.loads(income_msg)
@@ -72,6 +70,7 @@ def on_message(client, userdata, message):
         else:
             m[wb][staff].append(distance)
         
+        #print(m)
 
     except:
         #filter out events besides "detect"
@@ -80,7 +79,7 @@ def on_message(client, userdata, message):
 
     count += 1
     if count % 100 == 0: #when it collects 150 data
-        print('delay: ', str(int(time.time())-int(data['ts'])))
+       #print('delay: ', str(int(time.time())-int(data['ts'])))
         for b in m:
             for s in m[b].keys():
                 try:
@@ -116,9 +115,11 @@ def on_message(client, userdata, message):
 
         for u, e in p.items():
             print(u, e)
+        
         count = 0
-        m = {}
-
+        for wb in bridge.values():
+            m[wb] = {}
+        
         in_zone = []
 
         for staff, positions in p.items():
