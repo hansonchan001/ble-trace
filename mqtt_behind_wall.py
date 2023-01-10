@@ -22,6 +22,11 @@ bridge = {
     "iotdata/event/vh_WIFI_Bridge_02": 'bridge_2',
     "iotdata/event/vh_WIFI_Bridge_03": 'bridge_3',
     "iotdata/event/vh_WIFI_Bridge_04": 'bridge_4',
+    #"iotdata/event/vh_WIFI_Bridge_04": 'bridge_5',
+    #"iotdata/event/vh_WIFI_Bridge_04": 'bridge_6',
+    #"iotdata/event/vh_WIFI_Bridge_04": 'bridge_7',
+    #"iotdata/event/vh_WIFI_Bridge_04": 'bridge_8',
+
 }
 
 device = {
@@ -124,6 +129,10 @@ client.subscribe(topic="iotdata/event/vh_WIFI_Bridge_01")
 client.subscribe(topic="iotdata/event/vh_WIFI_Bridge_02")
 client.subscribe(topic="iotdata/event/vh_WIFI_Bridge_03")
 client.subscribe(topic="iotdata/event/vh_WIFI_Bridge_04")
+client.subscribe(topic="iotdata/event/vh_WIFI_Bridge_05")
+client.subscribe(topic="iotdata/event/vh_WIFI_Bridge_06")
+client.subscribe(topic="iotdata/event/vh_WIFI_Bridge_07")
+client.subscribe(topic="iotdata/event/vh_WIFI_Bridge_08")
 
 try:
     while True:

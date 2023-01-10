@@ -43,11 +43,16 @@ producer=KafkaProducer(
         value_serializer=lambda v: json.dumps(v).encode()
     )
 
+for wb in bridge:
+        m[wb] = {}
+
 def on_message(client, userdata, message):
 
     global m, l, count
     income_msg = str(message.payload.decode("utf-8"))
-    wb = bridge[str(message.topic)]
+    #wb = bridge[str(message.topic)]
+
+    
 
     try:
         data = json.loads(income_msg)
@@ -56,8 +61,8 @@ def on_message(client, userdata, message):
         N = 4 #low strength
         distance = round(10**((int(rssi1m)-int(rssi))/(10*N)), 2)
         
-        if wb not in m.keys():
-            m[wb] = {}
+        #if wb not in m.keys():
+        #    m[wb] = {}
 
         staff = device[data['mac']]
 
@@ -74,13 +79,15 @@ def on_message(client, userdata, message):
         pass
 
     count += 1
-    if count % 1000 == 0: #when it collects 150 data
+    if count % 100 == 0: #when it collects 150 data
         print('delay: ', str(int(time.time())-int(data['ts'])))
         for b in m:
             for s in m[b].keys():
-                a = round(sum(m[b][s])/len(m[b][s]), 2)
-                m[b][s] = a
-
+                try:
+                    a = round(sum(m[b][s])/len(m[b][s]), 2)
+                    m[b][s] = a
+                except:
+                    pass
 
         m_sorted = dict(sorted(m.items(), key=lambda x:x[0]))
 
@@ -124,26 +131,7 @@ def on_message(client, userdata, message):
                     if result > 0.5:
                         in_zone.append(staff)
                 except:
-                    print("cannot input to model, one of the bridges maybe offline")
-                    
-                    message =  {
-                        "Error": 0,
-                        "Timestamp": int(time.time())
-                    }
-
-                    future = producer.send(
-                        'DEVBLE',
-                        key='mytopic',
-                        value = message,
-                        partition=0
-                    )
-
-                    print("send {}\n".format(str(message)))
-        
-                    try:
-                        future.get(timeout=10)
-                    except :
-                        traceback.format_exc()
+                    print("cannot input to model")
 
         ######  send MQ message to Kafka    ########
 
@@ -163,8 +151,8 @@ def on_message(client, userdata, message):
 
         print("send {}\n".format(str(message)))
 
-        if (message["TotalNumber"] == '0'):
-            print("no staff is in the zone")
+        #if (message["TotalNumber"] == '0'):
+        #    print("no staff is in the zone")
 
         try:
             future.get(timeout=10)
@@ -191,6 +179,8 @@ client.subscribe(topic="iotdata/event/vh_WIFI_Bridge_01")
 client.subscribe(topic="iotdata/event/vh_WIFI_Bridge_02")
 client.subscribe(topic="iotdata/event/vh_WIFI_Bridge_03")
 client.subscribe(topic="iotdata/event/vh_WIFI_Bridge_04")
+
+
 
 while True:
     client.on_message=on_message

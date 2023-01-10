@@ -22,12 +22,17 @@ bridge = {
     "iotdata/event/vh_WIFI_Bridge_02": 'bridge_2',
     "iotdata/event/vh_WIFI_Bridge_03": 'bridge_3',
     "iotdata/event/vh_WIFI_Bridge_04": 'bridge_4',
+    #"iotdata/event/vh_WIFI_Bridge_01": 'bridge_5',
+    #"iotdata/event/vh_WIFI_Bridge_02": 'bridge_6',
+    #"iotdata/event/vh_WIFI_Bridge_03": 'bridge_7',
+    #"iotdata/event/vh_WIFI_Bridge_04": 'bridge_8',
 }
 
 device = {
     'D28A744F4C81': 'staff_10','E8ABCCA7945D': 'staff_03',
     'C5CD4CF0E65C': 'staff_04','FF45CE6F4BD8': 'staff_06',
-    'F1B636C0956E': 'staff_08','C729D2661CE4': 'staff_02',
+    'F1B636C0956E': 'staff_08',
+    'C729D2661CE4': 'staff_02',
     'C61777F0D7F8': 'staff_09','E21174FAF5B8': 'staff_01',
     'E5F45951535D': 'staff_05','E05F56833E68': 'staff_07',
 }

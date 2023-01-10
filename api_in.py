@@ -9,7 +9,6 @@ url = 'http://iot.rodsum.com/api/getlocationdetection'
 staff_list = ['Staff_03', 'Staff_04', 'Staff_06', 'Staff_08', 'Staff_10', 'Staff_01', 'Staff_02', 'Staff_05', 'Staff_07', 'Staff_09']
 bridge_list = ['vh_WIFI_Bridge_01', 'vh_WIFI_Bridge_02', 'vh_WIFI_Bridge_03', 'vh_WIFI_Bridge_04']
 
-
 count = 0
 l = []
 try: 
@@ -18,8 +17,6 @@ try:
         #window_in_seconds = 5
         dt = str(int(time.time()))
         df = str(int(dt)-70)
-        #print('dt: ', dt)
-        #print('df: ', df)
 
         p = {}
         for staff in staff_list:

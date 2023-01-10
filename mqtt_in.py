@@ -22,7 +22,9 @@ bridge = {
     "iotdata/event/vh_WIFI_Bridge_02": 'bridge_2',
     "iotdata/event/vh_WIFI_Bridge_03": 'bridge_3',
     "iotdata/event/vh_WIFI_Bridge_04": 'bridge_4',
+    "iotdata/event/vh_WIFI_Bridge_07": 'bridge_7',
 }
+
 
 device = {
     'D28A744F4C81': 'staff_10','E8ABCCA7945D': 'staff_03',
