@@ -48,9 +48,9 @@ def on_message(client, userdata, message):
         N = 4 #low strength
         distance = round(10**((int(rssi1m)-int(rssi))/(10*N)), 2)
         
-        """ if wb not in m.keys():
+        if wb not in m.keys():
             m[wb] = {}
- """
+        
         staff = device[data['mac']]
 
         if staff not in m[wb].keys():
@@ -64,7 +64,7 @@ def on_message(client, userdata, message):
         pass
 
     count += 1
-    if count % 500 == 0: 
+    if count % 100 == 0: 
         print('delay: ', str(int(time.time())-int(data['ts'])))
         for b in m:
             for s in m[b].keys():
@@ -84,6 +84,7 @@ def on_message(client, userdata, message):
         #print(k, '\n')
         for i, u in k.items():
             print(i, u)
+
         p={}
         for bg in k:
             for staff in k[bg]:

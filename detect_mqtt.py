@@ -49,7 +49,7 @@ for wb in bridge.values():
 def on_message(client, userdata, message):
 
     global m, l, count
-    income_msg = str(message.payload.decode("utf-8"))
+    income_msg = str(message.payload.decode("ISO-8859-1"))
     wb = bridge[str(message.topic)]
 
     try:
@@ -78,7 +78,7 @@ def on_message(client, userdata, message):
         pass
 
     count += 1
-    if count % 100 == 0: #when it collects 150 data
+    if count % 150 == 0: #when it collects 150 data
        #print('delay: ', str(int(time.time())-int(data['ts'])))
         for b in m:
             for s in m[b].keys():

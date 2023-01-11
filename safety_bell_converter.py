@@ -21,12 +21,15 @@ def on_message(client, userdata, message):
     except :
         traceback.format_exc()
 
-mqttBroker ="broker.hivemq.com"
+#mqttBroker ="broker.hivemq.com"ZE
+mqttBroker ="47.243.55.194"
+username = "ble"
+password = "vhsoft"
 client = mqtt.Client("tracy_safety_bell")
+client.username_pw_set(username, password)
 client.connect(mqttBroker, port=1883) 
-
 client.loop_start()
-client.subscribe(topic="safety")
+client.subscribe(topic="iotdata/m5watch")
 
 producer=KafkaProducer(
         bootstrap_servers = ['47.243.55.194:9092'],
