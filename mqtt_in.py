@@ -22,7 +22,7 @@ bridge = {
     "iotdata/event/vh_WIFI_Bridge_02": 'bridge_2',
     "iotdata/event/vh_WIFI_Bridge_03": 'bridge_3',
     "iotdata/event/vh_WIFI_Bridge_04": 'bridge_4',
-    "iotdata/event/vh_WIFI_Bridge_07": 'bridge_7',
+    
 }
 
 
@@ -65,7 +65,7 @@ def on_message(client, userdata, message):
         print("no data")
 
     count += 1
-    if count % 150 == 0: 
+    if count % 100 == 0: 
         print('delay: ', str(int(time.time())-int(data['ts'])))
         for b in m:
             for s in m[b].keys():

@@ -1,11 +1,10 @@
 import pandas as pd
 import numpy as np
-import datetime 
-from os import walk
+import datetime
 
-#turn all files to list then drop zero at once
+# eliminate irregular data
 
-dir = 'data_1222/data_mq_i_jan'
+dir = 'processed_inside/01121441.xlsx'
 
 def changeToList(file):
     n = []
@@ -19,16 +18,17 @@ def changeToList(file):
 
     return n
 
-f = []
-for (dirpath, dirnames, filenames) in walk(dir):
-    f.extend(filenames)
+a = pd.read_excel(dir)
+x = changeToList(a)
 
-x = []
-for file in f:
-    a = pd.read_excel(dir + '/' + file)
-    x += changeToList(a)
+n = []
+for i in x:
+    if i[0] > i[1] or i[2] > i[3]:
+        continue
+    else:
+        n.append(i)
 
-x = pd.DataFrame(x)
+x = pd.DataFrame(n)
 x = x.loc[(x != 0).any(axis=1)]
 df = x.loc[(x != 0).all(1)]
 df = df.dropna(axis=0, how='any')
@@ -36,6 +36,4 @@ df = df.dropna(axis=0, how='any')
 fileName = str(datetime.datetime.now().strftime('%m%d%H%M'))
 pd.DataFrame(df).to_excel('processed_inside/' + fileName + '.xlsx', index=False)
 
-x = np.array(df)
 print(df)
-print(df.shape)
