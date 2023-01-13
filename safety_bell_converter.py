@@ -39,4 +39,5 @@ producer=KafkaProducer(
 
 while True:
     client.on_message=on_message 
+    time.sleep(0.2)
     
