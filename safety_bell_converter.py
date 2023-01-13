@@ -36,8 +36,10 @@ producer=KafkaProducer(
         key_serializer=lambda k:json.dumps(k).encode(), 
         value_serializer=lambda v: json.dumps(v).encode()
     )
+client.on_message=on_message 
+client.loop_forever()
 
-while True:
+""" while True:
     client.on_message=on_message 
-    time.sleep(0.2)
+    time.sleep(0.2) """
     
