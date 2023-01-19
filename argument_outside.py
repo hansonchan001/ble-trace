@@ -3,6 +3,8 @@ import numpy as np
 import datetime 
 import random
 import math
+import paho.mqtt as mqtt
+
 
 di = 2.15   #initial distance to bridge (b1 in this case)
 dh = 3     #horizontal interval between augmentated points
@@ -31,7 +33,6 @@ for i in range(rows):
 print(data)
 
 #  ^    ^    ^  *     *b1              b2
-#  ^    ^    ^
 #  ^    ^    ^
 #  ^    ^    ^  *     *b3              b4
 
