@@ -74,7 +74,7 @@ def on_message(client, userdata, message):
 
     count += 1
     if count % 100 == 0: 
-        #print('delay: ', str(int(time.time())-int(data['ts'])))
+        print('delay: ', str(int(time.time())-int(data['ts'])))
         for b in m:
             for s in m[b].keys():
                 a = round(sum(m[b][s])/len(m[b][s]), 2)
@@ -134,11 +134,10 @@ client.subscribe(topic="iotdata/event/vh_WIFI_Bridge_08")
 try:
     while True:
         client.on_message=on_message 
-        time.sleep(0.2)
 
 except KeyboardInterrupt:
-    file_name = str(datetime.datetime.now().strftime('%m%d%H%M'))
-    pd.DataFrame(l).to_excel('data_19jan/' + file_name + '_10x5_b5.xlsx', index=False)
+    file_name = str(datetime.datetime.now().strftime('%H%M'))
+    pd.DataFrame(l).to_excel('data_19jan/' + file_name + '7x7_out.xlsx', index=False)
 
 finally:
     print('\ndata stored in excel file.')

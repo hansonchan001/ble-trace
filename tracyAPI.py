@@ -10,8 +10,8 @@ window_in_seconds = 120
 dt = str(int(time.time()))
 df = str(int(dt)-window_in_seconds)
 
-beacon_list = ['Staff_03', 'Staff_04', 'Staff_06', 'Staff_08', 'Staff_10', 'Staff_01', 'Staff_02', 'Staff_05', 'Staff_07', 'Staff_09']
-bridge_list = ['vh_WIFI_Bridge_01', 'vh_WIFI_Bridge_02', 'vh_WIFI_Bridge_03', 'vh_WIFI_Bridge_04']
+beacon_list = ['Staff_11', 'Staff_14', 'Staff_16', 'Staff_18', 'Staff_12', 'Staff_13', 'Staff_17', 'Staff_15', 'Staff_19', 'Staff_20']
+bridge_list = ['vh_WIFI_Bridge_05', 'vh_WIFI_Bridge_06', 'vh_WIFI_Bridge_07', 'vh_WIFI_Bridge_08']
 
 n = {'b':bridge_list[2],'df' :df,'dt': dt}
 d = requests.post(url, data = n)

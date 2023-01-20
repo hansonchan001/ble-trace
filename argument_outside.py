@@ -16,7 +16,6 @@ h = 5
 
 data = []
 for i in range(rows):
-    
     for j in range(columns):
         n = []
         d1 = math.sqrt((di+dh*j)**2 + (dv*i)**2)

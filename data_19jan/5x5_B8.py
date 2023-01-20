@@ -27,12 +27,20 @@ bridge = {
 
 
 device = {
-    'D28A744F4C81': 'staff_10','E8ABCCA7945D': 'staff_03',
-    'C5CD4CF0E65C': 'staff_04','FF45CE6F4BD8': 'staff_06',
-    'F1B636C0956E': 'staff_08','C729D2661CE4': 'staff_02',
-    'C61777F0D7F8': 'staff_09','E21174FAF5B8': 'staff_01',
-    'E5F45951535D': 'staff_05','E05F56833E68': 'staff_07',
+    #'D28A744F4C81': 'staff_10','E8ABCCA7945D': 'staff_03',
+    #'C5CD4CF0E65C': 'staff_04','FF45CE6F4BD8': 'staff_06',
+    #'F1B636C0956E': 'staff_08','C729D2661CE4': 'staff_02',
+    #'C61777F0D7F8': 'staff_09','E21174FAF5B8': 'staff_01',
+    #'E5F45951535D': 'staff_05','E05F56833E68': 'staff_07',
+    
+    'F2391DA65371': 'staff_20','DE1377101DC2': 'staff_13',
+    'D6D75A64E478': 'staff_14','C331BACD0387': 'staff_16',
+    'E305AEB86016': 'staff_15','C5D353F2F12B': 'staff_12',
+    'E5A7A9941FEA': 'staff_18','FF6915C61E14': 'staff_11',
+    'D49C69CBE18E': 'staff_19','C682D6D4DFFD': 'staff_17',
+    
 }
+
 
 def on_message(client, userdata, message):
 
@@ -129,8 +137,8 @@ try:
         time.sleep(0.2)
 
 except KeyboardInterrupt:
-    file_name = str(datetime.datetime.now().strftime('%H%M'))
-    pd.DataFrame(l).to_excel('data_19jan/' + file_name + '_b8.xlsx', index=False)
+    file_name = str(datetime.datetime.now().strftime('%m%d%H%M'))
+    pd.DataFrame(l).to_excel('data_19jan/' + file_name + '_5x5_b8.xlsx', index=False)
 
 finally:
     print('\ndata stored in excel file.')
