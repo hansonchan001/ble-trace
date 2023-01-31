@@ -25,7 +25,7 @@ def on_message(client, userdata, message):
     print("received message: " ,income_msg)
 
     future = producer.send(
-            'safety',
+            'DEVSOS',
             key='mytopic',
             value = income_msg,
             partition=0

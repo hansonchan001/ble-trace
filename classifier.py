@@ -17,8 +17,8 @@ def changeToList(file):
 
     return n
 
-inside_data = pd.read_excel('processed_inside/12231136.xlsx')
-outside_data = pd.read_excel('processed_outside/12231442.xlsx')
+inside_data = pd.read_excel('processed_inside/5x5_16.xlsx')
+outside_data = pd.read_excel('processed_outside/7x7out.xlsx')
 
 inside = changeToList(inside_data)
 outside = changeToList(outside_data)
