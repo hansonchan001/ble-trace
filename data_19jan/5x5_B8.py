@@ -138,7 +138,7 @@ try:
 
 except KeyboardInterrupt:
     file_name = str(datetime.datetime.now().strftime('%m%d%H%M'))
-    pd.DataFrame(l).to_excel('data_19jan/' + file_name + '_5x5_b8.xlsx', index=False)
+    pd.DataFrame(l).to_excel('data_19jan/' + file_name + '_5x5_outside.xlsx', index=False)
 
 finally:
     print('\ndata stored in excel file.')

@@ -20,10 +20,10 @@ count = 0
 m = {}
 
 bridge = {
-    "iotdata/event/vh_WIFI_Bridge_01": 'bridge_5',
-    "iotdata/event/vh_WIFI_Bridge_02": 'bridge_6',
-    "iotdata/event/vh_WIFI_Bridge_03": 'bridge_7',
-    "iotdata/event/vh_WIFI_Bridge_04": 'bridge_8',
+    "iotdata/event/vh_WIFI_Bridge_05": 'bridge_5',
+    "iotdata/event/vh_WIFI_Bridge_06": 'bridge_6',
+    "iotdata/event/vh_WIFI_Bridge_07": 'bridge_7',
+    "iotdata/event/vh_WIFI_Bridge_08": 'bridge_8',
 }
 
 device = {
@@ -42,7 +42,7 @@ device = {
 }
 
 #load pre-trained model to do classification
-model = keras.models.load_model('models/model_01031429')
+model = keras.models.load_model('models/model_02011222')
 
 producer=KafkaProducer(
         bootstrap_servers = ['47.243.55.194:9092'], 
@@ -183,10 +183,10 @@ client.on_connect = on_connect
 client.connect(mqttbroker, port)
 client.loop_start()
 
-client.subscribe(topic="iotdata/event/vh_WIFI_Bridge_01")
-client.subscribe(topic="iotdata/event/vh_WIFI_Bridge_02")
-client.subscribe(topic="iotdata/event/vh_WIFI_Bridge_03")
-client.subscribe(topic="iotdata/event/vh_WIFI_Bridge_04")
+client.subscribe(topic="iotdata/event/vh_WIFI_Bridge_05")
+client.subscribe(topic="iotdata/event/vh_WIFI_Bridge_06")
+client.subscribe(topic="iotdata/event/vh_WIFI_Bridge_07")
+client.subscribe(topic="iotdata/event/vh_WIFI_Bridge_08")
 
 
 
