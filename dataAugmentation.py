@@ -68,7 +68,7 @@ for i in range(rows_r):
         d1 = math.sqrt((w_r+di_r+dh_r*j)**2 + (dv_r*i)**2)
         d2 = math.sqrt((di_r+dh_r*j)**2 + (dv_r*i)**2)
         d3 = math.sqrt((w_r+di_r+dh_r*j)**2 + (h_r-dv_r*i)**2)
-        d4 = math.sqrt((w_r+di_r+dh_r*j)**2 + (h-dv_r*i)**2)
+        d4 = math.sqrt((di_r+dh_r*j)**2 + (h-dv_r*i)**2)
         n.append(round(d1, 2))
         n.append(round(d2, 2))
         n.append(round(d3, 2))
