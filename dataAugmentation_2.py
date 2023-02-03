@@ -3,28 +3,24 @@ import numpy as np
 import math
 import json
 
+#           (0.12, 1.5, 0.6, 1.8)   *   *   #   #   (1.5, 0.18, 1.6, 0.7)
 #           *   *   *   #   #   #   #   #   &   &   &
-#           *   *   *   #   #   #   #   #   &   &   &
-#           *   *   *   -   -   -   -   -   &   &   &
+#           *   *   *   ()   -   -   -   -   &   &   &
 #           *   *   *   -   -   -   -   -   &   &   &
 #           *   *   *   -   -   -   -   -   &   &   &
 #           *   *   *   -   -   -   -   -   &   &   &
 #           *   *   *   @   @   @   @   @   &   &   &
-#           *   *   *   @   @   @   @   @   &   &   &
+#           (0.8, 1.7, 0.18, 1.6) *   *   @   @   @ (1.7, 0.9, 1.5, 0.2 )
 
-
-
-
-
-di = 0.3  #initial distance to bridge
+di = 0.18  #initial distance to bridge
 columns = 40
 rows = 40
-w = 1.2
-h = 0.3
+w = 1.5
+h = 0.6
 dv = h/rows    #vertical interval between augementated points
 dh = w/columns     #horizontal interval between augmentated points
 
-inside = []
+totalArea = []
 for i in range(rows):
     for j in range(columns):
         n = []
@@ -37,7 +33,7 @@ for i in range(rows):
         n.append(round(d3, 2))
         n.append(round(d4, 2))
         #print(n)
-        inside.append(n)
+        totalArea.append(n)
 
 #print(inside)
 #print(len(inside))
