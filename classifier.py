@@ -1,9 +1,10 @@
 from keras.models import Sequential
-from keras.layers import Dense
+from keras.layers import Dense, Dropout
 import pandas as pd
 import numpy as np
 import datetime
 import matplotlib.pyplot as plt
+import random
 
 def changeToList(file):
     n = []
@@ -23,6 +24,12 @@ outside_data = pd.read_excel('processed_outside/7x7out.xlsx')
 inside = changeToList(inside_data)
 outside = changeToList(outside_data)
 
+random.shuffle(inside)
+inside = inside[:500]
+
+random.shuffle(outside)
+outside = outside[:800]
+
 y_inside = []
 y_outside = []
 for i in range(len(inside)):
@@ -33,7 +40,6 @@ for g in range(len(outside)):
 Y_train = y_inside+ y_outside
 X_train = inside + outside
 
-
 suffled_data = {'input': X_train, 
                 'output': Y_train}
 
@@ -43,11 +49,15 @@ df = df.sample(frac = 1)
 X_test = df['input'].values.tolist()
 Y_test = df['output'].values.tolist()
 
-X = np.array(X_test[:-500])
-Y = np.array(Y_test[:-500])
+evaluateSamplesNumber = 20
+
+X = np.array(X_test[:-evaluateSamplesNumber])
+Y = np.array(Y_test[:-evaluateSamplesNumber])
 
 classifier = Sequential()
-classifier.add(Dense(units = 8, activation = 'relu', input_dim = 4))
+#classifier.add(Dropout(.1, input_shape=(4,)))
+classifier.add(Dense(units = 12, activation = 'relu', input_dim = 4))
+classifier.add(Dense(units = 8, activation = 'relu'))
 classifier.add(Dense(units = 4, activation = 'relu'))
 classifier.add(Dense(units = 2, activation = 'relu'))
 classifier.add(Dense(units = 1, activation = 'sigmoid'))
@@ -56,8 +66,8 @@ classifier.compile(optimizer = 'adam', loss = 'binary_crossentropy', metrics=['a
 history = classifier.fit(X, Y, validation_split = 0.2, batch_size = 1, epochs = 1000, shuffle= True)
 
 #evaluate the model
-X_Eva = np.array(X_test[500:])
-Y_Eva = np.array(Y_test[500:])
+X_Eva = np.array(X_test[evaluateSamplesNumber:])
+Y_Eva = np.array(Y_test[evaluateSamplesNumber:])
 loss, accuracy = classifier.evaluate(X_Eva, Y_Eva)
 
 model_name = str(datetime.datetime.now().strftime('%m%d%H%M'))
