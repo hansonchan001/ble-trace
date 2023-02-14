@@ -6,36 +6,24 @@ import datetime
 import matplotlib.pyplot as plt
 import random
 
-def changeToList(file):
-    n = []
-    for i in range(len(file)):
-        c = []
-        for j in range(len(file.iloc[0])):
-            c.append(file[j][i])
-            #print(x[i][j])
-        b = np.array(c)
-        n.append(b)
-
-    return n
-
-inside_data = pd.read_excel('processed_inside/5x5_16.xlsx')
-outside_data = pd.read_excel('processed_outside/7x7out.xlsx')
-
-inside = changeToList(inside_data)
-outside = changeToList(outside_data)
+inside = pd.DataFrame(pd.read_excel('processed_inside/10x5.xlsx')).values.tolist()
+outside = pd.DataFrame(pd.read_excel('processed_outside/7x12out.xlsx')).values.tolist()
 
 random.shuffle(inside)
-inside = inside[:500]
+inside = inside[:1500]
 
 random.shuffle(outside)
 outside = outside[:800]
 
-y_inside = []
-y_outside = []
-for i in range(len(inside)):
-    y_inside.append(1)
-for g in range(len(outside)):
-    y_outside.append(0)
+y_inside = [1 for i in range(len(inside))]
+y_outside = [0 for i in range(len(outside))]
+
+#y_inside = []
+#y_outside = []
+#for i in range(len(inside)):
+#    y_inside.append(1)
+#for g in range(len(outside)):
+#    y_outside.append(0)
 
 Y_train = y_inside+ y_outside
 X_train = inside + outside
@@ -49,7 +37,7 @@ df = df.sample(frac = 1)
 X_test = df['input'].values.tolist()
 Y_test = df['output'].values.tolist()
 
-evaluateSamplesNumber = 20
+evaluateSamplesNumber = 200
 
 X = np.array(X_test[:-evaluateSamplesNumber])
 Y = np.array(Y_test[:-evaluateSamplesNumber])
@@ -66,8 +54,8 @@ classifier.compile(optimizer = 'adam', loss = 'binary_crossentropy', metrics=['a
 history = classifier.fit(X, Y, validation_split = 0.2, batch_size = 1, epochs = 1000, shuffle= True)
 
 #evaluate the model
-X_Eva = np.array(X_test[evaluateSamplesNumber:])
-Y_Eva = np.array(Y_test[evaluateSamplesNumber:])
+X_Eva = np.array(X_test[-evaluateSamplesNumber:])
+Y_Eva = np.array(Y_test[-evaluateSamplesNumber:])
 loss, accuracy = classifier.evaluate(X_Eva, Y_Eva)
 
 model_name = str(datetime.datetime.now().strftime('%m%d%H%M'))
@@ -89,22 +77,3 @@ ax2.legend(['train', 'test'], loc='upper left')
 
 ax2.label_outer()
 
-
-
-
-# summarize history for accuracy
-""" plt.plot(history.history['accuracy'])
-plt.plot(history.history['val_accuracy'])
-plt.title('model accuracy')
-plt.ylabel('accuracy')
-plt.xlabel('epoch')
-plt.legend(['train', 'test'], loc='upper left')
-plt.show()
-# summarize history for loss
-plt.plot(history.history['loss'])
-plt.plot(history.history['val_loss'])
-plt.title('model loss')
-plt.ylabel('loss')
-plt.xlabel('epoch')
-plt.legend(['train', 'test'], loc='upper left')
-plt.show() """

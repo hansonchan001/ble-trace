@@ -1,12 +1,15 @@
+import keras
 import paho.mqtt.client as mqtt
-from pykafka import KafkaClient
-import time
-import random
+from kafka import KafkaProducer
+from kafka.errors import kafka_errors
+import traceback
 import json
-import pandas as pd
-import datetime
+import requests
+import time
+import numpy as np
+import random
 
-#mqttbroker = '47.243.55.194:9092'
+#mqtt client details
 mqttbroker = 'iot.rodsum.com'
 port = 1883
 username = 'vhsoft'
@@ -15,16 +18,13 @@ client_id = f'python-mqtt-{random.randint(0, 1000)}'
 
 count = 0
 m = {}
-l = []
 
 bridge = {
     "iotdata/event/vh_WIFI_Bridge_05": 'bridge_5',
     "iotdata/event/vh_WIFI_Bridge_06": 'bridge_6',
     "iotdata/event/vh_WIFI_Bridge_07": 'bridge_7',
     "iotdata/event/vh_WIFI_Bridge_08": 'bridge_8',
-    
 }
-
 
 device = {
     #'D28A744F4C81': 'staff_10','E8ABCCA7945D': 'staff_03',
@@ -41,14 +41,23 @@ device = {
     
 }
 
+#load pre-trained model to do classification
+model = keras.models.load_model('models/model_0.88_02071520')
+
+producer=KafkaProducer(
+        bootstrap_servers = ['47.243.55.194:9092'], 
+        key_serializer=lambda k:json.dumps(k).encode(), 
+        value_serializer=lambda v: json.dumps(v).encode()
+    )
+
+for wb in bridge.values():
+        m[wb] = {}
 
 def on_message(client, userdata, message):
 
     global m, l, count
-    income_msg = str(message.payload.decode("utf-8"))
+    income_msg = str(message.payload.decode("ISO-8859-1"))
     wb = bridge[str(message.topic)]
-    #print(income_msg)
-    #print(wb)
 
     try:
         data = json.loads(income_msg)
@@ -57,8 +66,8 @@ def on_message(client, userdata, message):
         N = 4 #low strength
         distance = round(10**((int(rssi1m)-int(rssi))/(10*N)), 2)
         
-        if wb not in m.keys():
-            m[wb] = {}
+        #if wb not in m.keys():
+        #    m[wb] = {}
 
         staff = device[data['mac']]
 
@@ -68,18 +77,23 @@ def on_message(client, userdata, message):
         else:
             m[wb][staff].append(distance)
         
+        #print(m)
 
     except:
-        print("no data")
+        #filter out events besides "detect"
+        #print("not detect event")
+        pass
 
     count += 1
-    if count % 100 == 0: 
-        #print('delay: ', str(int(time.time())-int(data['ts'])))
+    if count % 150 == 0: #when it collects 150 data
+       #print('delay: ', str(int(time.time())-int(data['ts'])))
         for b in m:
             for s in m[b].keys():
-                a = round(sum(m[b][s])/len(m[b][s]), 2)
-                m[b][s] = a
-
+                try:
+                    a = round(sum(m[b][s])/len(m[b][s]), 2)
+                    m[b][s] = a
+                except:
+                    pass
 
         m_sorted = dict(sorted(m.items(), key=lambda x:x[0]))
 
@@ -106,13 +120,56 @@ def on_message(client, userdata, message):
 
         p = dict(sorted(p.items()))
 
-        for x in list(p.values()):
-            l.append(x)
-
-                
-        print(p, '\n')
+        for u, e in p.items():
+            print(u, e)
+        
         count = 0
-        m = {}
+        for wb in bridge.values():
+            m[wb] = {}
+        
+        in_zone = []
+
+        for staff, positions in p.items():
+            
+            if 0 in positions:
+                continue
+            else:
+                try:
+                    result = model.predict(np.array([positions]))
+                    if result > 0.5:
+                        in_zone.append(staff)
+                except:
+                    print("cannot input to model")
+
+        ######  send MQ message to Kafka    ########
+
+        message =  {
+            "ZoneCode": "Metro",
+            "TotalNumber": str(len(in_zone)),
+            "TagList": in_zone,
+            "Timestamp": int(time.time())
+        }
+
+        future = producer.send(
+            'DEVBLE',
+            key='mytopic',
+            value = message,
+            partition=0
+        )
+
+        print("send {}\n".format(str(message)))
+
+        #if (message["TotalNumber"] == '0'):
+        #    print("no staff is in the zone")
+
+        try:
+            future.get(timeout=10)
+        except :
+            traceback.format_exc()
+
+        #### finsihed sending MQ message to Kafka #######
+    
+    
 
 def on_connect(client, userdata, flags, rc):
         if rc == 0:
@@ -131,14 +188,10 @@ client.subscribe(topic="iotdata/event/vh_WIFI_Bridge_06")
 client.subscribe(topic="iotdata/event/vh_WIFI_Bridge_07")
 client.subscribe(topic="iotdata/event/vh_WIFI_Bridge_08")
 
-try:
-    while True:
-        client.on_message=on_message 
-        time.sleep(0.2)
 
-except KeyboardInterrupt:
-    file_name = str(datetime.datetime.now().strftime('%m%d%H%M'))
-    pd.DataFrame(l).to_excel('data_19jan/' + file_name + '_8x8_b6.xlsx', index=False)
 
-finally:
-    print('\ndata stored in excel file.')
+while True:
+    client.on_message=on_message
+    time.sleep(0.2)
+    
+

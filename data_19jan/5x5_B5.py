@@ -137,8 +137,8 @@ try:
         time.sleep(0.2)
 
 except KeyboardInterrupt:
-    file_name = str(datetime.datetime.now().strftime('%m%d%H%M'))
-    pd.DataFrame(l).to_excel('data_19jan/' + file_name + '_5x5_b5.xlsx', index=False)
+    file_name = str(datetime.datetime.now().strftime('%m%d%H%M27'))
+    pd.DataFrame(l).to_excel('data_19jan/' + file_name + '_8x8_b5.xlsx', index=False)
 
 finally:
     print('\ndata stored in excel file.')
