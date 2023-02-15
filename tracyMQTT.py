@@ -25,6 +25,8 @@ bridge = {
     "iotdata/event/vh_WIFI_Bridge_06": 'bridge_6',
     "iotdata/event/vh_WIFI_Bridge_07": 'bridge_7',
     "iotdata/event/vh_WIFI_Bridge_08": 'bridge_8',
+
+    "iotdata/event/vh_WIFI_Bridge_08": 'bridge_10',
     
 }
 
@@ -140,7 +142,7 @@ client.loop_start()
 #client.subscribe(topic="iotdata/event/vh_WIFI_Bridge_02")
 #client.subscribe(topic="iotdata/event/vh_WIFI_Bridge_03")
 #client.subscribe(topic="iotdata/event/vh_WIFI_Bridge_04")
-
+client.subscribe(topic="iotdata/event/vh_WIFI_Bridge_10")
 client.subscribe(topic="iotdata/event/vh_WIFI_Bridge_05")
 client.subscribe(topic="iotdata/event/vh_WIFI_Bridge_06")
 client.subscribe(topic="iotdata/event/vh_WIFI_Bridge_07")
