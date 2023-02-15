@@ -18,22 +18,13 @@ outside = outside[:800]
 y_inside = [1 for i in range(len(inside))]
 y_outside = [0 for i in range(len(outside))]
 
-#y_inside = []
-#y_outside = []
-#for i in range(len(inside)):
-#    y_inside.append(1)
-#for g in range(len(outside)):
-#    y_outside.append(0)
-
 Y_train = y_inside+ y_outside
 X_train = inside + outside
 
 suffled_data = {'input': X_train, 
                 'output': Y_train}
 
-df= pd.DataFrame(suffled_data)
-df = df.sample(frac = 1)
-
+df = pd.DataFrame(suffled_data).sample(frac = 1)
 X_test = df['input'].values.tolist()
 Y_test = df['output'].values.tolist()
 
