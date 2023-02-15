@@ -1,29 +1,28 @@
 from keras.models import Sequential
 from keras.layers import Dense, Dropout
+from sklearn import model_selection
+import matplotlib.pyplot as plt
 import pandas as pd
 import numpy as np
 import datetime
-import matplotlib.pyplot as plt
-import random
 
-inside = pd.DataFrame(pd.read_excel('processed_inside/10x5.xlsx')).values.tolist()
-outside = pd.DataFrame(pd.read_excel('processed_outside/7x12out.xlsx')).values.tolist()
-
-random.shuffle(inside)
-inside = inside[:1500]
-
-random.shuffle(outside)
-outside = outside[:800]
+inside = pd.DataFrame(pd.read_excel('processed_inside/5x5_27.xlsx')).values.tolist()
+outside = pd.DataFrame(pd.read_excel('processed_outside/7x7out.xlsx')).values.tolist()
 
 y_inside = [1 for i in range(len(inside))]
 y_outside = [0 for i in range(len(outside))]
 
+<<<<<<< HEAD
 Y_train = y_inside+ y_outside
 X_train = inside + outside
+=======
+Y = y_inside+ y_outside
+X = inside + outside
+>>>>>>> 7e202fac6f1b6782ee7263f504c4ab5d90323b14
 
-suffled_data = {'input': X_train, 
-                'output': Y_train}
+X_train, X_test, Y_train, Y_test = model_selection.train_test_split(X, Y, test_size=0.2, random_state=0)
 
+<<<<<<< HEAD
 df = pd.DataFrame(suffled_data).sample(frac = 1)
 X_test = df['input'].values.tolist()
 Y_test = df['output'].values.tolist()
@@ -32,6 +31,12 @@ evaluateSamplesNumber = 200
 
 X = np.array(X_test[:-evaluateSamplesNumber])
 Y = np.array(Y_test[:-evaluateSamplesNumber])
+=======
+X_train = np.array(X_train)
+X_test = np.array(X_test)
+Y_train = np.array(Y_train)
+Y_test = np.array(Y_test)
+>>>>>>> 7e202fac6f1b6782ee7263f504c4ab5d90323b14
 
 classifier = Sequential()
 #classifier.add(Dropout(.1, input_shape=(4,)))
@@ -42,12 +47,8 @@ classifier.add(Dense(units = 2, activation = 'relu'))
 classifier.add(Dense(units = 1, activation = 'sigmoid'))
 classifier.compile(optimizer = 'adam', loss = 'binary_crossentropy', metrics=['accuracy'])
 
-history = classifier.fit(X, Y, validation_split = 0.2, batch_size = 1, epochs = 1000, shuffle= True)
-
-#evaluate the model
-X_Eva = np.array(X_test[-evaluateSamplesNumber:])
-Y_Eva = np.array(Y_test[-evaluateSamplesNumber:])
-loss, accuracy = classifier.evaluate(X_Eva, Y_Eva)
+history = classifier.fit(X_train, Y_train, validation_split = 0.2, batch_size = 1, epochs = 50, shuffle= True)
+loss, accuracy = classifier.evaluate(X_test, Y_test)
 
 model_name = str(datetime.datetime.now().strftime('%m%d%H%M'))
 classifier.save('models/model_' + model_name)

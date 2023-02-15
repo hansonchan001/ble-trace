@@ -5,7 +5,7 @@ from os import walk
 
 #turn all files to list then drop zero at once
 
-dir = 'data_19jan/10x5_32'
+dir = 'data_19jan/5x5_16'
 
 def changeToList(file):
     n = []
