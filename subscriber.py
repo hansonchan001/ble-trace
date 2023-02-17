@@ -39,13 +39,13 @@ def on_message(client, userdata, message):
     income_msg = str(message.payload.decode("utf-8"))
     #topic = str(message.topic)
     data = json.loads(income_msg)
-    #print(income_msg)
-    try:
+    print(income_msg)
+    """ try:
         m.append(data['rssi'])
         print(data['rssi'],np.std(m))
     except:
         pass
-
+ """
 def on_connect(client, userdata, flags, rc):
         if rc == 0:
             print("Connected to MQTT Broker!")
