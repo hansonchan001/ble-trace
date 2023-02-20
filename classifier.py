@@ -8,21 +8,25 @@ import datetime
 import random
 
 a = pd.DataFrame(pd.read_excel('processed_inside/02151129.xlsx')).values.tolist()
+b = pd.DataFrame(pd.read_excel('processed_outside/5x5out_400.xlsx')).values.tolist()
 
 for i in a:
     random.shuffle(i)
+for i in b:
+    random.shuffle(i)
 
 inside = pd.DataFrame(pd.read_excel('processed_inside/02151129.xlsx')).values.tolist()
-outside = pd.DataFrame(pd.read_excel('processed_outside/02151127.xlsx')).values.tolist()
+outside = pd.DataFrame(pd.read_excel('processed_outside/5x5out_400.xlsx')).values.tolist()
 
-r = []
+""" r = []
 for i in outside:
     for x in i:
-        if x >= 1:
+        if x >= 1.1:
             r.append(i)
-            break
+            break """
 
 inside = a + inside
+outside = b + outside
 
 y_inside = [1 for i in range(len(inside))]
 y_outside = [0 for i in range(len(outside))]
@@ -41,15 +45,13 @@ Y_test = np.array(Y_test)
 
 classifier = Sequential()
 #classifier.add(Dropout(.1, input_shape=(4,)))
-classifier.add(Dense(units = 8, activation = 'relu', input_dim = 4))
-#classifier.add(Dense(units = 12, activation = 'relu'))
+classifier.add(Dense(units = 24, activation = 'relu', input_dim = 4))
 classifier.add(Dense(units = 8, activation = 'relu'))
-classifier.add(Dense(units = 4, activation = 'relu'))
-#classifier.add(Dense(units = 2, activation = 'relu'))
+#classifier.add(Dense(units = 4, activation = 'relu'))
 classifier.add(Dense(units = 1, activation = 'sigmoid'))
 classifier.compile(optimizer = 'adam', loss = 'binary_crossentropy', metrics=['accuracy'])
 
-history = classifier.fit(X_train, Y_train, validation_split = 0.2, batch_size = 1, epochs = 400, shuffle= True)
+history = classifier.fit(X_train, Y_train, validation_split = 0.2, batch_size = 1, epochs = 20, shuffle= True)
 loss, accuracy = classifier.evaluate(X_test, Y_test)
 
 model_name = str(datetime.datetime.now().strftime('%m%d_'))
