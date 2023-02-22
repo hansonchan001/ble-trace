@@ -136,8 +136,8 @@ try:
         client.on_message=on_message 
 
 except KeyboardInterrupt:
-    file_name = str(datetime.datetime.now().strftime('%H%M_27'))
-    pd.DataFrame(l).to_excel('data_19jan/' + file_name + '7x7_out.xlsx', index=False)
+    file_name = str(datetime.datetime.now().strftime('%H%M'))
+    pd.DataFrame(l).to_excel('data_19jan/' + file_name + '_out_215.xlsx', index=False)
 
 finally:
     print('\ndata stored in excel file.')

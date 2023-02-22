@@ -35,7 +35,7 @@ device = {
 }
 
 #load pre-trained model to do classification
-model = keras.models.load_model('models/model_0.88_02071520')
+model = keras.models.load_model('models/model_0220_0.96')
 
 producer=KafkaProducer(
         bootstrap_servers = ['47.243.55.194:9092'], 
@@ -69,9 +69,12 @@ def on_message(client, userdata, message):
 
     except:
         pass
+    
+    #this line decide the window time by numebr of staff
+    reportNumber = len(list(m[list(bridge.values())[0]]))*30
 
     count += 1
-    if count % 150 == 0: #when it collects 150 data
+    if count % reportNumber == 0: 
         for b in m:
             for s in m[b].keys():
                 try:
@@ -105,17 +108,11 @@ def on_message(client, userdata, message):
 
         p = dict(sorted(p.items()))
 
-        for u, e in p.items():
-            print(u, e)
-        
-        count = 0
-        for wb in bridge.values():
-            m[wb] = {}
+        for staff, positions in p.items():
+            print(staff, positions)
         
         in_zone = []
-
         for staff, positions in p.items():
-            
             if 0 in positions:
                 continue
             else:
@@ -126,6 +123,10 @@ def on_message(client, userdata, message):
                 except:
                     print("cannot input to model")
 
+        count = 0
+        for wb in bridge.values():
+            m[wb] = {}
+        
         ######  send MQ message to Kafka    ########
 
         message =  {

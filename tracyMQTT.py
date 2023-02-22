@@ -16,9 +16,9 @@ m = {}
 l = []
 
 bridge = {
-    #"iotdata/event/vh_WIFI_Bridge_01": 'bridge_1',
+    "iotdata/event/vh_WIFI_Bridge_01": 'bridge_1',
     #"iotdata/event/vh_WIFI_Bridge_02": 'bridge_2',
-    #"iotdata/event/vh_WIFI_Bridge_03": 'bridge_3',
+    "iotdata/event/vh_WIFI_Bridge_03": 'bridge_3',
     #"iotdata/event/vh_WIFI_Bridge_04": 'bridge_4',
     
     "iotdata/event/vh_WIFI_Bridge_05": 'bridge_5',
@@ -26,7 +26,7 @@ bridge = {
     "iotdata/event/vh_WIFI_Bridge_07": 'bridge_7',
     "iotdata/event/vh_WIFI_Bridge_08": 'bridge_8',
 
-    "iotdata/event/vh_WIFI_Bridge_08": 'bridge_10',
+    "iotdata/event/vh_WIFI_Bridge_10": 'bridge_10',
     
 }
 
