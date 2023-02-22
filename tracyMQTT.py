@@ -136,7 +136,7 @@ client = mqtt.Client(client_id)
 client.username_pw_set(username, password)
 client.on_connect = on_connect
 client.connect(mqttbroker, port)
-client.loop_start()
+#client.loop_start()
 
 #client.subscribe(topic="iotdata/event/vh_WIFI_Bridge_01")
 #client.subscribe(topic="iotdata/event/vh_WIFI_Bridge_02")
@@ -148,7 +148,8 @@ client.subscribe(topic="iotdata/event/vh_WIFI_Bridge_06")
 client.subscribe(topic="iotdata/event/vh_WIFI_Bridge_07")
 client.subscribe(topic="iotdata/event/vh_WIFI_Bridge_08")
 
-while True:
+""" while True:
     client.on_message=on_message 
     time.sleep(0.2)
-    
+    """ 
+client.loop_forever()
