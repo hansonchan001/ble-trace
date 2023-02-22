@@ -71,7 +71,8 @@ def on_message(client, userdata, message):
         pass
     
     #this line decide the window time by numebr of staff
-    reportNumber = len(list(m[list(bridge.values())[0]]))*30
+    #reportNumber = len(list(m[list(bridge.values())[0]]))*30
+    reportNumber = 200
 
     count += 1
     if count % reportNumber == 0: 
