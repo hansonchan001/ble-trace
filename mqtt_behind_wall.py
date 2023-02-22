@@ -5,6 +5,9 @@ import random
 import json
 import pandas as pd
 import datetime
+import sys
+
+output_path = sys.argv[1]
 
 #mqttbroker = '47.243.55.194:9092'
 mqttbroker = 'iot.rodsum.com'
@@ -139,8 +142,8 @@ try:
         client.on_message=on_message 
 
 except KeyboardInterrupt:
-    file_name = str(datetime.datetime.now().strftime('%H%M'))
-    pd.DataFrame(l).to_excel('data_1222/data_mq_o/' + file_name + '_wall.xlsx', index=False)
+    #file_name = str(datetime.datetime.now().strftime('%H%M'))
+    pd.DataFrame(l).to_excel(output_path + '_.xlsx', index=False)
 
 finally:
     print('\ndata stored in excel file.')
