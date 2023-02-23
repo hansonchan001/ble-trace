@@ -35,7 +35,7 @@ device = {
 }
 
 #load pre-trained model to do classification
-model = keras.models.load_model('models/model_0220_0.96')
+model = keras.models.load_model('models/model_0222_0.93')
 
 producer=KafkaProducer(
         bootstrap_servers = ['47.243.55.194:9092'], 

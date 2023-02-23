@@ -35,7 +35,7 @@ device = {
 }
 
 #load pre-trained model to do classification
-model = keras.models.load_model('models/model_0220_0.96')
+model = keras.models.load_model('models/model_0223_0.91')
 
 for wb in bridge.values():
         m[wb] = {}
@@ -66,10 +66,12 @@ def on_message(client, userdata, message):
     
     #this line decide the window time by numebr of staff
     #reportNumber = len(list(m[list(bridge.values())[0]]))*30
-    reportNumber = 250
+    reportNumber = 100
 
     count += 1
     if count % reportNumber == 0: 
+
+        #print(m)
         for b in m:
             for s in m[b].keys():
                 try:
@@ -122,6 +124,7 @@ def on_message(client, userdata, message):
         count = 0
         for wb in bridge.values():
             m[wb] = {}
+        #print(m)
     
     
 
