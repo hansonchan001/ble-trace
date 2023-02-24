@@ -17,6 +17,7 @@ password = 'soft_vh'
 client_id = f'python-mqtt-{random.randint(0, 1000)}'
 
 count = 0
+reportNumber = 300
 m = {}
 
 bridge = {
@@ -65,8 +66,7 @@ def on_message(client, userdata, message):
         pass
     
     #this line decide the window time by numebr of staff
-    #reportNumber = len(list(m[list(bridge.values())[0]]))*30
-    reportNumber = 100
+    
 
     count += 1
     if count % reportNumber == 0: 
@@ -122,6 +122,7 @@ def on_message(client, userdata, message):
         print(len(in_zone), in_zone)
 
         count = 0
+        reportNumber = len(list(m[list(bridge.values())[0]]))*30
         for wb in bridge.values():
             m[wb] = {}
         #print(m)
@@ -145,6 +146,7 @@ client.subscribe(topic="iotdata/event/vh_WIFI_Bridge_06")
 client.subscribe(topic="iotdata/event/vh_WIFI_Bridge_07")
 client.subscribe(topic="iotdata/event/vh_WIFI_Bridge_08")
 
+#client.loop_forever()
 
 
 while True:
