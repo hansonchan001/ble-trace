@@ -53,4 +53,3 @@ ax2.set(xlabel='epoch')
 ax2.legend(['train', 'test'], loc='upper left')
 
 ax2.label_outer()
-
