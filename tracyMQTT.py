@@ -17,7 +17,7 @@ password = 'soft_vh'
 client_id = f'python-mqtt-{random.randint(0, 1000)}'
 
 count = 0
-reportNumber = 300
+reportNumber = 50
 m = {}
 
 bridge = {
@@ -36,14 +36,14 @@ device = {
 }
 
 #load pre-trained model to do classification
-model = keras.models.load_model('models/model_0223_0.91')
+model = keras.models.load_model('models/model_02241644')
 
 for wb in bridge.values():
         m[wb] = {}
 
 def on_message(client, userdata, message):
 
-    global m, l, count
+    global m, l, count, reportNumber
     income_msg = str(message.payload.decode("ISO-8859-1"))
     wb = bridge[str(message.topic)]
 
@@ -69,63 +69,67 @@ def on_message(client, userdata, message):
     
 
     count += 1
-    if count % reportNumber == 0: 
+    try:
+        if count % reportNumber == 0: 
 
-        #print(m)
-        for b in m:
-            for s in m[b].keys():
-                try:
-                    a = round(sum(m[b][s])/len(m[b][s]), 2)
-                    m[b][s] = a
-                except:
-                    pass
+            #print(m)
+            for b in m:
+                for s in m[b].keys():
+                    try:
+                        a = round(sum(m[b][s])/len(m[b][s]), 2)
+                        m[b][s] = a
+                    except:
+                        pass
 
-        m_sorted = dict(sorted(m.items(), key=lambda x:x[0]))
+            m_sorted = dict(sorted(m.items(), key=lambda x:x[0]))
 
-        k = {}
-        for i in m_sorted:
-            a = dict(sorted(m[i].items(), key=lambda x:x[0]))
-            k[i] = a
-        #print(k, '\n')
-        
-        p={}
-        for bg in k:
-            for staff in k[bg]:
-                if staff not in p:
-                    p[staff] = []
-                
-                #p[staff].append(k[bg][staff])
-        
-        for bg in k:
-            for staff in p:
-                try:
-                    p[staff].append(k[bg][staff])
-                except:
-                    p[staff].append(0)
+            k = {}
+            for i in m_sorted:
+                a = dict(sorted(m[i].items(), key=lambda x:x[0]))
+                k[i] = a
+            #print(k, '\n')
 
-        p = dict(sorted(p.items()))
+            p={}
+            for bg in k:
+                for staff in k[bg]:
+                    if staff not in p:
+                        p[staff] = []
 
-        for staff, positions in p.items():
-            print(staff, positions)
-        
-        in_zone = []
-        for staff, positions in p.items():
-            if 0 in positions:
-                continue
-            else:
-                try:
-                    result = model.predict(np.array([positions]))
-                    if result > 0.5:
-                        in_zone.append(staff)
-                except:
-                    print("cannot input to model")
-        print(len(in_zone), in_zone)
+                    #p[staff].append(k[bg][staff])
 
-        count = 0
-        reportNumber = len(list(m[list(bridge.values())[0]]))*30
-        for wb in bridge.values():
-            m[wb] = {}
-        #print(m)
+            for bg in k:
+                for staff in p:
+                    try:
+                        p[staff].append(k[bg][staff])
+                    except:
+                        p[staff].append(0)
+
+            p = dict(sorted(p.items()))
+
+            for staff, positions in p.items():
+                print(staff, positions)
+
+            in_zone = []
+            for staff, positions in p.items():
+                if 0 in positions:
+                    continue
+                else:
+                    try:
+                        result = model.predict(np.array([positions]))
+                        if result > 0.5:
+                            in_zone.append(staff)
+                    except:
+                        print("cannot input to model")
+            print(len(in_zone), in_zone)
+            #print(reportNumber)
+            count = 0
+            reportNumber = len(list(m[list(bridge.values())[0]]))*8
+            for wb in bridge.values():
+                m[wb] = {}
+            #print(m)
+
+    except:
+        pass
     
     
 
