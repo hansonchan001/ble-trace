@@ -17,6 +17,7 @@ password = 'soft_vh'
 client_id = f'python-mqtt-{random.randint(0, 1000)}'
 
 count = 0
+reportNumber = 50
 m = {}
 
 bridge = {
@@ -35,7 +36,7 @@ device = {
 }
 
 #load pre-trained model to do classification
-model = keras.models.load_model('models/model_0222_0.93')
+model = keras.models.load_model('models/model_02241644')
 
 producer=KafkaProducer(
         bootstrap_servers = ['47.243.55.194:9092'], 
@@ -48,7 +49,7 @@ for wb in bridge.values():
 
 def on_message(client, userdata, message):
 
-    global m, l, count
+    global m, l, count, reportNumber
     income_msg = str(message.payload.decode("ISO-8859-1"))
     wb = bridge[str(message.topic)]
 
@@ -72,7 +73,7 @@ def on_message(client, userdata, message):
     
     #this line decide the window time by numebr of staff
     #reportNumber = len(list(m[list(bridge.values())[0]]))*30
-    reportNumber = 200
+    
 
     count += 1
     if count % reportNumber == 0: 
@@ -125,6 +126,7 @@ def on_message(client, userdata, message):
                     print("cannot input to model")
 
         count = 0
+        reportNumber = len(list(m[list(bridge.values())[0]]))*8
         for wb in bridge.values():
             m[wb] = {}
         
