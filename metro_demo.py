@@ -36,7 +36,7 @@ device = {
 }
 
 #load pre-trained model to do classification
-model = keras.models.load_model('models/model_02241644')
+model = keras.models.load_model('models/model_02281437')
 
 producer=KafkaProducer(
         bootstrap_servers = ['47.243.55.194:9092'], 
@@ -49,7 +49,7 @@ for wb in bridge.values():
 
 def on_message(client, userdata, message):
 
-    global m, l, count
+    global m, l, count, reportNumber
     income_msg = str(message.payload.decode("ISO-8859-1"))
     wb = bridge[str(message.topic)]
 
@@ -74,31 +74,28 @@ def on_message(client, userdata, message):
     count += 1
     try:
         if count % reportNumber == 0: 
-
-            #print(m)
-            for b in m:
-                for s in m[b].keys():
-                    try:
-                        a = round(sum(m[b][s])/len(m[b][s]), 2)
-                        m[b][s] = a
-                    except:
-                        pass
+            try:
+                for b in m:
+                    for s in m[b].keys():
+                        try:
+                            a = round(sum(m[b][s])/len(m[b][s]), 2)
+                            m[b][s] = a
+                        except:
+                            pass
+            except:
+                pass
 
             m_sorted = dict(sorted(m.items(), key=lambda x:x[0]))
-
             k = {}
             for i in m_sorted:
                 a = dict(sorted(m[i].items(), key=lambda x:x[0]))
                 k[i] = a
-            #print(k, '\n')
 
             p={}
             for bg in k:
                 for staff in k[bg]:
                     if staff not in p:
                         p[staff] = []
-
-                    #p[staff].append(k[bg][staff])
 
             for bg in k:
                 for staff in p:
@@ -108,7 +105,6 @@ def on_message(client, userdata, message):
                         p[staff].append(0)
 
             p = dict(sorted(p.items()))
-
             for staff, positions in p.items():
                 print(staff, positions)
 
@@ -123,43 +119,40 @@ def on_message(client, userdata, message):
                             in_zone.append(staff)
                     except:
                         print("cannot input to model")
+            
             print(len(in_zone), in_zone)
-            #print(reportNumber)
             count = 0
-            reportNumber = len(list(m[list(bridge.values())[0]]))*8
+            reportNumber = 10+len(list(m[list(bridge.values())[0]]))*8
             for wb in bridge.values():
                 m[wb] = {}
-            #print(m)
+        
+            ######  send MQ message to Kafka    ########
 
+            message =  {
+                "ZoneCode": "Metro",
+                "TotalNumber": str(len(in_zone)),
+                "TagList": in_zone,
+                "Timestamp": int(time.time())
+            }
+
+            future = producer.send(
+                'DEVBLE',
+                key='mytopic',   
+                value = message,
+                partition=0
+            )
+
+            print("send {}\n".format(str(message)))
+
+            try:
+                future.get(timeout=10)
+            except :
+                traceback.format_exc()
+            
+            #### finsihed sending MQ message to Kafka #######
+    
     except:
         pass
-        
-        ######  send MQ message to Kafka    ########
-
-        message =  {
-            "ZoneCode": "Metro",
-            "TotalNumber": str(len(in_zone)),
-            "TagList": in_zone,
-            "Timestamp": int(time.time())
-        }
-
-        future = producer.send(
-            'DEVBLE',
-            key='mytopic',
-            value = message,
-            partition=0
-        )
-
-        print("send {}\n".format(str(message)))
-
-        try:
-            future.get(timeout=10)
-        except :
-            traceback.format_exc()
-
-        #### finsihed sending MQ message to Kafka #######
-    
-    
 
 def on_connect(client, userdata, flags, rc):
         if rc == 0:

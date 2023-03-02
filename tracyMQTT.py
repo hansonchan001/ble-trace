@@ -36,7 +36,7 @@ device = {
 }
 
 #load pre-trained model to do classification
-model = keras.models.load_model('models/model_02241644')
+model = keras.models.load_model('models/model_02281437')
 
 for wb in bridge.values():
         m[wb] = {}
