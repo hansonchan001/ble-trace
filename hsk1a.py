@@ -4,7 +4,6 @@ from kafka import KafkaProducer
 from kafka.errors import kafka_errors
 import traceback
 import json
-import requests
 import time
 import numpy as np
 import random
@@ -21,22 +20,29 @@ reportNumber = 50
 m = {}
 
 bridge = {
-    "iotdata/event/vh_WIFI_Bridge_05": 'bridge_5',
-    "iotdata/event/vh_WIFI_Bridge_06": 'bridge_6',
-    "iotdata/event/vh_WIFI_Bridge_07": 'bridge_7',
-    "iotdata/event/vh_WIFI_Bridge_08": 'bridge_8',
+    "iotdata/event/vh_WIFI_Bridge_10": 'bridge_10',
+    "iotdata/event/vh_WIFI_Bridge_09": 'bridge_9',
+    "iotdata/event/vh_WIFI_Bridge_03": 'bridge_3',
+    "iotdata/event/vh_WIFI_Bridge_04": 'bridge_4',
 }
 
 device = {
-    'F2391DA65371': 'staff_20','DE1377101DC2': 'staff_13',
-    'D6D75A64E478': 'staff_14','C331BACD0387': 'staff_16',
-    'E305AEB86016': 'staff_15','C5D353F2F12B': 'staff_12',
-    'E5A7A9941FEA': 'staff_18','FF6915C61E14': 'staff_11',
-    'D49C69CBE18E': 'staff_19','C682D6D4DFFD': 'staff_17',
+    'D28A744F4C81': 'staff_10','E8ABCCA7945D': 'staff_03',
+    'C5CD4CF0E65C': 'staff_04','FF45CE6F4BD8': 'staff_06',
+    'F1B636C0956E': 'staff_08','C729D2661CE4': 'staff_02',
+    'C61777F0D7F8': 'staff_09','E21174FAF5B8': 'staff_01',
+    'E5F45951535D': 'staff_05','E05F56833E68': 'staff_07',
+    
+    #'F2391DA65371': 'staff_20','DE1377101DC2': 'staff_13',
+    #'D6D75A64E478': 'staff_14','C331BACD0387': 'staff_16',
+    #'E305AEB86016': 'staff_15','C5D353F2F12B': 'staff_12',
+    #'E5A7A9941FEA': 'staff_18','FF6915C61E14': 'staff_11',
+    #'D49C69CBE18E': 'staff_19','C682D6D4DFFD': 'staff_17',
+    
 }
 
 #load pre-trained model to do classification
-model = keras.models.load_model('models/model_02281437')
+model = keras.models.load_model('models/model_03021050')
 
 producer=KafkaProducer(
         bootstrap_servers = ['47.243.55.194:9092'], 
@@ -59,6 +65,9 @@ def on_message(client, userdata, message):
         rssi = data['rssi']
         N = 4 #low strength
         distance = round(10**((int(rssi1m)-int(rssi))/(10*N)), 2)
+        
+        #if wb not in m.keys():
+        #    m[wb] = {}
 
         staff = device[data['mac']]
 
@@ -67,13 +76,13 @@ def on_message(client, userdata, message):
             m[wb][staff].append(distance)
         else:
             m[wb][staff].append(distance)
+        
+        #print(m)
 
     except:
+        #filter out events besides "detect"
+        #print("not detect event")
         pass
-    
-    #this line decide the window time by numebr of staff
-    #reportNumber = len(list(m[list(bridge.values())[0]]))*30
-    reportNumber = 200
 
     count += 1
     try:
@@ -133,7 +142,7 @@ def on_message(client, userdata, message):
             ######  send MQ message to Kafka    ########
 
             message =  {
-                "ZoneCode": "Metro",
+                "ZoneCode": "HSK1A01",
                 "TotalNumber": str(len(in_zone)),
                 "TagList": in_zone,
                 "Timestamp": int(time.time())
@@ -157,6 +166,8 @@ def on_message(client, userdata, message):
     
     except:
         pass
+    
+    
 
 def on_connect(client, userdata, flags, rc):
         if rc == 0:
@@ -170,10 +181,12 @@ client.on_connect = on_connect
 client.connect(mqttbroker, port)
 client.loop_start()
 
-client.subscribe(topic="iotdata/event/vh_WIFI_Bridge_05")
-client.subscribe(topic="iotdata/event/vh_WIFI_Bridge_06")
-client.subscribe(topic="iotdata/event/vh_WIFI_Bridge_07")
-client.subscribe(topic="iotdata/event/vh_WIFI_Bridge_08")
+client.subscribe(topic="iotdata/event/vh_WIFI_Bridge_10")
+client.subscribe(topic="iotdata/event/vh_WIFI_Bridge_09")
+client.subscribe(topic="iotdata/event/vh_WIFI_Bridge_03")
+client.subscribe(topic="iotdata/event/vh_WIFI_Bridge_04")
+
+
 
 while True:
     client.on_message=on_message
