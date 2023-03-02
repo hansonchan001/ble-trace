@@ -18,6 +18,7 @@ client_id = f'python-mqtt-{random.randint(0, 1000)}'
 
 count = 0
 reportNumber = 50
+reportNumber = 50
 m = {}
 
 bridge = {
@@ -71,6 +72,10 @@ def on_message(client, userdata, message):
     except:
         pass
     
+    #this line decide the window time by numebr of staff
+    #reportNumber = len(list(m[list(bridge.values())[0]]))*30
+    reportNumber = 200
+
     count += 1
     try:
         if count % reportNumber == 0: 
