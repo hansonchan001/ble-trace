@@ -2,9 +2,13 @@ import pandas as pd
 from sklearn import model_selection
 from sklearn import svm
 import random
+import dataHandler
 
-inside = pd.DataFrame(pd.read_excel('processed_inside/03021011.xlsx')).values.tolist()
-outside = pd.DataFrame(pd.read_excel('processed_outside/03021011.xlsx')).values.tolist()
+inside = dataHandler.handle_data('HSK1A_in')
+outside = dataHandler.handle_data('HSK1A_out')
+
+#inside = pd.DataFrame(pd.read_excel('processed_inside/03021011.xlsx')).values.tolist()
+#outside = pd.DataFrame(pd.read_excel('processed_outside/03021011.xlsx')).values.tolist()
 
 y_inside = [1 for i in range(len(inside))]
 y_outside = [0 for i in range(len(outside))]
