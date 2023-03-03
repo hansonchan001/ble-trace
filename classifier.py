@@ -6,10 +6,13 @@ import pandas as pd
 import numpy as np
 import datetime
 import random
+import dataHandler
 
 # load input data to list
-inside = pd.DataFrame(pd.read_excel('processed_inside/02241630.xlsx')).values.tolist()
-outside = pd.DataFrame(pd.read_excel('processed_outside/02241456_out.xlsx')).values.tolist()
+#inside = pd.DataFrame(pd.read_excel('processed_inside/02241630.xlsx')).values.tolist()
+#outside = pd.DataFrame(pd.read_excel('processed_outside/02241456_out.xlsx')).values.tolist()
+inside = dataHandler.handle_data('HSK1A_in')
+outside = dataHandler.handle_data('HSK1A_out')
 
 #create labels according to the amonut of features
 y_inside = [1 for i in range(len(inside))]

@@ -9,9 +9,6 @@ import sys
 input_dir = sys.argv[1]
 output_dir = sys.argv[2]
 
-
-#dir = 'data_19jan/5x5_16'
-
 f = []
 for (dirpath, dirnames, filenames) in walk(input_dir):
     f.extend(filenames)
@@ -27,7 +24,6 @@ df = x.loc[(x != 0).all(1)]
 df = df.dropna(axis=0, how='any')
 
 fileName = str(datetime.datetime.now().strftime('%m%d%H%M'))
-#pd.DataFrame(df).to_excel('processed_inside/' + fileName + '.xlsx', index=False)
 pd.DataFrame(df).to_excel('processed_' + output_dir +'/'+ fileName + '.xlsx', index=False)
 
 x = np.array(df)

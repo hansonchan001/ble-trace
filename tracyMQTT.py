@@ -36,7 +36,7 @@ device = {
 }
 
 #load pre-trained model to do classification
-model = keras.models.load_model('models/model_02281437')
+model = keras.models.load_model('models/model_02241644')
 
 for wb in bridge.values():
         m[wb] = {}
@@ -65,37 +65,41 @@ def on_message(client, userdata, message):
     except:
         pass
     
-    #this line decide the window time by numebr of staff
-    
+    # MQ messages are stored and handled as above
+    # when data amount has reach reportnumber it will be further processed
+    # and fed into model to determine whether its inside or outside
+    # the reportnumber is in direct proportion to the staff number
+    # the more the staff, the longer it processes
+    # if the reportnumber coefficient is set too low, the accuracy would be lower
+    # since there would be zeros in staff cooridinates.
+    # if the coefficient is set too high, inference would take long time
+    # kafka would response slower than usual
 
     count += 1
     try:
-        if count % reportNumber == 0: 
-
-            #print(m)
-            for b in m:
-                for s in m[b].keys():
-                    try:
-                        a = round(sum(m[b][s])/len(m[b][s]), 2)
-                        m[b][s] = a
-                    except:
-                        pass
+        if count == reportNumber: 
+            try:
+                for b in m:
+                    for s in m[b].keys():
+                        try:
+                            a = round(sum(m[b][s])/len(m[b][s]), 2)
+                            m[b][s] = a
+                        except:
+                            pass
+            except:
+                pass
 
             m_sorted = dict(sorted(m.items(), key=lambda x:x[0]))
-
             k = {}
             for i in m_sorted:
                 a = dict(sorted(m[i].items(), key=lambda x:x[0]))
                 k[i] = a
-            #print(k, '\n')
 
             p={}
             for bg in k:
                 for staff in k[bg]:
                     if staff not in p:
                         p[staff] = []
-
-                    #p[staff].append(k[bg][staff])
 
             for bg in k:
                 for staff in p:
@@ -105,7 +109,6 @@ def on_message(client, userdata, message):
                         p[staff].append(0)
 
             p = dict(sorted(p.items()))
-
             for staff, positions in p.items():
                 print(staff, positions)
 
@@ -116,17 +119,17 @@ def on_message(client, userdata, message):
                 else:
                     try:
                         result = model.predict(np.array([positions]))
-                        if result > 0.5:
+                        if result > 0.38:
                             in_zone.append(staff)
                     except:
                         print("cannot input to model")
+            
             print(len(in_zone), in_zone)
-            #print(reportNumber)
+            print(' ')
             count = 0
-            reportNumber = len(list(m[list(bridge.values())[0]]))*8
+            reportNumber = 5+len(list(m[list(bridge.values())[0]]))*14
             for wb in bridge.values():
                 m[wb] = {}
-            #print(m)
 
     except:
         pass

@@ -4,7 +4,6 @@ from kafka import KafkaProducer
 from kafka.errors import kafka_errors
 import traceback
 import json
-import requests
 import time
 import numpy as np
 import random
@@ -36,7 +35,7 @@ device = {
 }
 
 #load pre-trained model to do classification
-model = keras.models.load_model('models/model_02281437')
+model = keras.models.load_model('models/model_02241644')
 
 producer=KafkaProducer(
         bootstrap_servers = ['47.243.55.194:9092'], 
@@ -71,13 +70,19 @@ def on_message(client, userdata, message):
     except:
         pass
     
-    #this line decide the window time by numebr of staff
-    #reportNumber = len(list(m[list(bridge.values())[0]]))*30
-    reportNumber = 200
+    # MQ messages are stored and handled as above
+    # when data amount has reach reportnumber it will be further processed
+    # and fed into model to determine whether its inside or outside
+    # the reportnumber is in direct proportion to the staff number
+    # the more the staff, the longer it processes
+    # if the reportnumber coefficient is set too low, the accuracy would be lower
+    # since there would be zeros in staff cooridinates.
+    # if the coefficient is set too high, inference would take long time
+    # kafka would response slower than usual
 
     count += 1
     try:
-        if count % reportNumber == 0: 
+        if count == reportNumber: 
             try:
                 for b in m:
                     for s in m[b].keys():
@@ -119,19 +124,17 @@ def on_message(client, userdata, message):
                 else:
                     try:
                         result = model.predict(np.array([positions]))
-                        if result > 0.5:
+                        if result > 0.38:
                             in_zone.append(staff)
                     except:
                         print("cannot input to model")
             
-            print(len(in_zone), in_zone)
             count = 0
-            reportNumber = 10+len(list(m[list(bridge.values())[0]]))*8
+            reportNumber = 5+len(list(m[list(bridge.values())[0]]))*13
             for wb in bridge.values():
                 m[wb] = {}
         
             ######  send MQ message to Kafka    ########
-
             message =  {
                 "ZoneCode": "Metro",
                 "TotalNumber": str(len(in_zone)),
@@ -152,7 +155,6 @@ def on_message(client, userdata, message):
                 future.get(timeout=10)
             except :
                 traceback.format_exc()
-            
             #### finsihed sending MQ message to Kafka #######
     
     except:
